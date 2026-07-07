@@ -1,0 +1,10 @@
+[10:35:43] Form yüklendi.
+[10:35:46] Önce bağlantı kurmalısınız.
+[10:35:47] Önce bağlantı kurmalısınız.
+[10:35:48] Bağlantı ayarları hazırlandı
+[10:35:48] Tip: RTU, Slave ID: 1
+[10:35:54] Okuma Hatası: The write timed out.
+[10:36:00] Sürekli okuma durduruldu.
+[10:36:05] Sürekli okuma başlatıldı. Aralık: 2 saniye.
+[10:36:13] Okuma Hatası: The write timed out.
+[10:36:13] Sürekli okuma durduruldu.
