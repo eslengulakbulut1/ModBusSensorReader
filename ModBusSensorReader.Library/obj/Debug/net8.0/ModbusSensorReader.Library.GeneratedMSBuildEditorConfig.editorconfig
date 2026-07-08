@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ModbusSensorReader.Library
-build_property.ProjectDir = C:\Users\CASPER\Desktop\staj\proje-1\ModbusSensorReader.Library\
+build_property.ProjectDir = C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.Library\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

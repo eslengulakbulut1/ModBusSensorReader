@@ -254,6 +254,7 @@ namespace ModbusSensorReader.Library.Services
             };
         }
 
+        
     }
 }
 

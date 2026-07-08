@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GOyFo3dSOvk=",
+  "dgSpecHash": "SzwgOuXvTt0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\CASPER\\Desktop\\staj\\proje-1\\ModbusSensorReader.Library\\ModbusSensorReader.Library.csproj",
+  "projectFilePath": "C:\\Users\\CASPER\\Desktop\\staj\\ModBusSensorReader\\ModbusSensorReader.Library\\ModbusSensorReader.Library.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\CASPER\\.nuget\\packages\\nmodbus\\3.0.83\\nmodbus.3.0.83.nupkg.sha512",
     "C:\\Users\\CASPER\\.nuget\\packages\\nmodbus.serial\\3.0.83\\nmodbus.serial.3.0.83.nupkg.sha512",

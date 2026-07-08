@@ -37,10 +37,8 @@ partial class Form1
         btnStop = new Button();
         label8 = new Label();
         txtSlaveId = new TextBox();
-        cmbWriteDataType = new ComboBox();
         btnRead = new Button();
         label9 = new Label();
-        label15 = new Label();
         label10 = new Label();
         txtWriteValue = new TextBox();
         cmbFuncCode = new ComboBox();
@@ -53,10 +51,38 @@ partial class Form1
         cmbDataType = new ComboBox();
         label11 = new Label();
         btnStartRead = new Button();
+        cmbWriteDataType = new ComboBox();
+        label15 = new Label();
+        groupBox5 = new GroupBox();
+        tableLayoutPanel2 = new TableLayoutPanel();
+        label17 = new Label();
+        label18 = new Label();
+        label19 = new Label();
+        label20 = new Label();
+        label21 = new Label();
+        label22 = new Label();
+        label23 = new Label();
+        label24 = new Label();
+        txtSensorName = new TextBox();
+        txtSensorSlave = new TextBox();
+        txtTemperatureRegister = new TextBox();
+        txtTemperatureCoefficient = new TextBox();
+        txtPressureRegister = new TextBox();
+        txtPressureCoefficient = new TextBox();
+        txtHumidityRegister = new TextBox();
+        txtHumidityCoefficient = new TextBox();
+        btnSaveProfile = new Button();
         groupBox3 = new GroupBox();
-        lblLastReadTime = new Label();
-        lblParsedValue = new Label();
-        lblRawRegisters = new Label();
+        grpSensorValues = new GroupBox();
+        cmbSensorList = new ComboBox();
+        lblSensorLastRead = new Label();
+        lblHumidity = new Label();
+        lblPressure = new Label();
+        lblTemperature = new Label();
+        lblActiveSensor = new Label();
+        lblLastRead = new Label();
+        lblSensorValue = new Label();
+        lblRawRegister = new Label();
         groupBox1 = new GroupBox();
         tlpConnection = new TableLayoutPanel();
         label1 = new Label();
@@ -79,12 +105,17 @@ partial class Form1
         btnDisconnected = new Button();
         groupBox4 = new GroupBox();
         tlpLog = new TableLayoutPanel();
-        chcLogToFile = new CheckBox();
         txtLog = new TextBox();
+        chcLogToFile = new CheckBox();
+        btnSelectLogFolder = new Button();
+        lblFilePath = new Label();
         tableLayoutPanel1.SuspendLayout();
         groupBox2.SuspendLayout();
         tlpModBus.SuspendLayout();
+        groupBox5.SuspendLayout();
+        tableLayoutPanel2.SuspendLayout();
         groupBox3.SuspendLayout();
+        grpSensorValues.SuspendLayout();
         groupBox1.SuspendLayout();
         tlpConnection.SuspendLayout();
         groupBox4.SuspendLayout();
@@ -107,16 +138,16 @@ partial class Form1
         tableLayoutPanel1.Name = "tableLayoutPanel1";
         tableLayoutPanel1.RowCount = 1;
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        tableLayoutPanel1.Size = new Size(1343, 637);
+        tableLayoutPanel1.Size = new Size(1523, 819);
         tableLayoutPanel1.TabIndex = 0;
         // 
         // groupBox2
         // 
         groupBox2.Controls.Add(tlpModBus);
         groupBox2.Dock = DockStyle.Fill;
-        groupBox2.Location = new Point(379, 3);
+        groupBox2.Location = new Point(429, 3);
         groupBox2.Name = "groupBox2";
-        groupBox2.Size = new Size(370, 631);
+        groupBox2.Size = new Size(420, 813);
         groupBox2.TabIndex = 3;
         groupBox2.TabStop = false;
         groupBox2.Text = "ModBus İşlem Ayarları";
@@ -132,10 +163,8 @@ partial class Form1
         tlpModBus.Controls.Add(btnStop, 1, 11);
         tlpModBus.Controls.Add(label8, 0, 0);
         tlpModBus.Controls.Add(txtSlaveId, 1, 0);
-        tlpModBus.Controls.Add(cmbWriteDataType, 1, 8);
         tlpModBus.Controls.Add(btnRead, 0, 10);
         tlpModBus.Controls.Add(label9, 0, 1);
-        tlpModBus.Controls.Add(label15, 0, 8);
         tlpModBus.Controls.Add(label10, 0, 2);
         tlpModBus.Controls.Add(txtWriteValue, 1, 7);
         tlpModBus.Controls.Add(cmbFuncCode, 1, 1);
@@ -148,6 +177,9 @@ partial class Form1
         tlpModBus.Controls.Add(cmbDataType, 1, 5);
         tlpModBus.Controls.Add(label11, 0, 4);
         tlpModBus.Controls.Add(btnStartRead, 0, 11);
+        tlpModBus.Controls.Add(cmbWriteDataType, 1, 8);
+        tlpModBus.Controls.Add(label15, 0, 8);
+        tlpModBus.Controls.Add(groupBox5, 0, 9);
         tlpModBus.Dock = DockStyle.Fill;
         tlpModBus.Location = new Point(3, 23);
         tlpModBus.Name = "tlpModBus";
@@ -162,17 +194,18 @@ partial class Form1
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-        tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-        tlpModBus.Size = new Size(364, 605);
+        tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 43F));
+        tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
+        tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+        tlpModBus.Size = new Size(414, 787);
         tlpModBus.TabIndex = 0;
         // 
         // txtSamplingTime
         // 
         txtSamplingTime.Dock = DockStyle.Fill;
-        txtSamplingTime.Location = new Point(161, 123);
+        txtSamplingTime.Location = new Point(183, 123);
         txtSamplingTime.Name = "txtSamplingTime";
-        txtSamplingTime.Size = new Size(200, 27);
+        txtSamplingTime.Size = new Size(228, 27);
         txtSamplingTime.TabIndex = 37;
         // 
         // label16
@@ -181,16 +214,16 @@ partial class Form1
         label16.Dock = DockStyle.Fill;
         label16.Location = new Point(3, 120);
         label16.Name = "label16";
-        label16.Size = new Size(152, 40);
+        label16.Size = new Size(174, 40);
         label16.TabIndex = 36;
         label16.Text = "Sampling Time";
         // 
         // btnWrite
         // 
         btnWrite.Dock = DockStyle.Fill;
-        btnWrite.Location = new Point(161, 508);
+        btnWrite.Location = new Point(183, 703);
         btnWrite.Name = "btnWrite";
-        btnWrite.Size = new Size(200, 44);
+        btnWrite.Size = new Size(228, 37);
         btnWrite.TabIndex = 35;
         btnWrite.Text = "Yaz";
         btnWrite.UseVisualStyleBackColor = true;
@@ -198,9 +231,9 @@ partial class Form1
         // btnStop
         // 
         btnStop.Dock = DockStyle.Fill;
-        btnStop.Location = new Point(161, 558);
+        btnStop.Location = new Point(183, 746);
         btnStop.Name = "btnStop";
-        btnStop.Size = new Size(200, 44);
+        btnStop.Size = new Size(228, 38);
         btnStop.TabIndex = 27;
         btnStop.Text = "Okumayı Durdur";
         btnStop.UseVisualStyleBackColor = true;
@@ -211,33 +244,24 @@ partial class Form1
         label8.Dock = DockStyle.Fill;
         label8.Location = new Point(3, 0);
         label8.Name = "label8";
-        label8.Size = new Size(152, 40);
+        label8.Size = new Size(174, 40);
         label8.TabIndex = 9;
         label8.Text = "Slave ID";
         // 
         // txtSlaveId
         // 
         txtSlaveId.Dock = DockStyle.Fill;
-        txtSlaveId.Location = new Point(161, 3);
+        txtSlaveId.Location = new Point(183, 3);
         txtSlaveId.Name = "txtSlaveId";
-        txtSlaveId.Size = new Size(200, 27);
+        txtSlaveId.Size = new Size(228, 27);
         txtSlaveId.TabIndex = 10;
-        // 
-        // cmbWriteDataType
-        // 
-        cmbWriteDataType.Dock = DockStyle.Fill;
-        cmbWriteDataType.FormattingEnabled = true;
-        cmbWriteDataType.Location = new Point(161, 323);
-        cmbWriteDataType.Name = "cmbWriteDataType";
-        cmbWriteDataType.Size = new Size(200, 28);
-        cmbWriteDataType.TabIndex = 34;
         // 
         // btnRead
         // 
         btnRead.Dock = DockStyle.Fill;
-        btnRead.Location = new Point(3, 508);
+        btnRead.Location = new Point(3, 703);
         btnRead.Name = "btnRead";
-        btnRead.Size = new Size(152, 44);
+        btnRead.Size = new Size(174, 37);
         btnRead.TabIndex = 19;
         btnRead.Text = "Oku";
         btnRead.UseVisualStyleBackColor = true;
@@ -248,19 +272,9 @@ partial class Form1
         label9.Dock = DockStyle.Fill;
         label9.Location = new Point(3, 40);
         label9.Name = "label9";
-        label9.Size = new Size(152, 40);
+        label9.Size = new Size(174, 40);
         label9.TabIndex = 19;
         label9.Text = "Function Code";
-        // 
-        // label15
-        // 
-        label15.AutoSize = true;
-        label15.Dock = DockStyle.Fill;
-        label15.Location = new Point(3, 320);
-        label15.Name = "label15";
-        label15.Size = new Size(152, 40);
-        label15.TabIndex = 33;
-        label15.Text = "W-Data Type";
         // 
         // label10
         // 
@@ -268,25 +282,25 @@ partial class Form1
         label10.Dock = DockStyle.Fill;
         label10.Location = new Point(3, 80);
         label10.Name = "label10";
-        label10.Size = new Size(152, 40);
+        label10.Size = new Size(174, 40);
         label10.TabIndex = 21;
         label10.Text = "Register Count";
         // 
         // txtWriteValue
         // 
         txtWriteValue.Dock = DockStyle.Fill;
-        txtWriteValue.Location = new Point(161, 283);
+        txtWriteValue.Location = new Point(183, 283);
         txtWriteValue.Name = "txtWriteValue";
-        txtWriteValue.Size = new Size(200, 27);
+        txtWriteValue.Size = new Size(228, 27);
         txtWriteValue.TabIndex = 32;
         // 
         // cmbFuncCode
         // 
         cmbFuncCode.Dock = DockStyle.Fill;
         cmbFuncCode.FormattingEnabled = true;
-        cmbFuncCode.Location = new Point(161, 43);
+        cmbFuncCode.Location = new Point(183, 43);
         cmbFuncCode.Name = "cmbFuncCode";
-        cmbFuncCode.Size = new Size(200, 28);
+        cmbFuncCode.Size = new Size(228, 28);
         cmbFuncCode.TabIndex = 20;
         // 
         // label14
@@ -295,32 +309,32 @@ partial class Form1
         label14.Dock = DockStyle.Fill;
         label14.Location = new Point(3, 280);
         label14.Name = "label14";
-        label14.Size = new Size(152, 40);
+        label14.Size = new Size(174, 40);
         label14.TabIndex = 31;
         label14.Text = "W-Value";
         // 
         // txtRegisterCount
         // 
         txtRegisterCount.Dock = DockStyle.Fill;
-        txtRegisterCount.Location = new Point(161, 83);
+        txtRegisterCount.Location = new Point(183, 83);
         txtRegisterCount.Name = "txtRegisterCount";
-        txtRegisterCount.Size = new Size(200, 27);
+        txtRegisterCount.Size = new Size(228, 27);
         txtRegisterCount.TabIndex = 22;
         // 
         // txtWriteAddress
         // 
         txtWriteAddress.Dock = DockStyle.Fill;
-        txtWriteAddress.Location = new Point(161, 243);
+        txtWriteAddress.Location = new Point(183, 243);
         txtWriteAddress.Name = "txtWriteAddress";
-        txtWriteAddress.Size = new Size(200, 27);
+        txtWriteAddress.Size = new Size(228, 27);
         txtWriteAddress.TabIndex = 30;
         // 
         // txtStartAddress
         // 
         txtStartAddress.Dock = DockStyle.Fill;
-        txtStartAddress.Location = new Point(161, 163);
+        txtStartAddress.Location = new Point(183, 163);
         txtStartAddress.Name = "txtStartAddress";
-        txtStartAddress.Size = new Size(200, 27);
+        txtStartAddress.Size = new Size(228, 27);
         txtStartAddress.TabIndex = 24;
         // 
         // label13
@@ -329,7 +343,7 @@ partial class Form1
         label13.Dock = DockStyle.Fill;
         label13.Location = new Point(3, 240);
         label13.Name = "label13";
-        label13.Size = new Size(152, 40);
+        label13.Size = new Size(174, 40);
         label13.TabIndex = 29;
         label13.Text = "W-Address";
         // 
@@ -339,7 +353,7 @@ partial class Form1
         label12.Dock = DockStyle.Fill;
         label12.Location = new Point(3, 200);
         label12.Name = "label12";
-        label12.Size = new Size(152, 40);
+        label12.Size = new Size(174, 40);
         label12.TabIndex = 25;
         label12.Text = "R-Data Type";
         // 
@@ -347,9 +361,9 @@ partial class Form1
         // 
         cmbDataType.Dock = DockStyle.Fill;
         cmbDataType.FormattingEnabled = true;
-        cmbDataType.Location = new Point(161, 203);
+        cmbDataType.Location = new Point(183, 203);
         cmbDataType.Name = "cmbDataType";
-        cmbDataType.Size = new Size(200, 28);
+        cmbDataType.Size = new Size(228, 28);
         cmbDataType.TabIndex = 26;
         // 
         // label11
@@ -358,59 +372,358 @@ partial class Form1
         label11.Dock = DockStyle.Fill;
         label11.Location = new Point(3, 160);
         label11.Name = "label11";
-        label11.Size = new Size(152, 40);
+        label11.Size = new Size(174, 40);
         label11.TabIndex = 23;
         label11.Text = "R-Start Address";
         // 
         // btnStartRead
         // 
         btnStartRead.Dock = DockStyle.Fill;
-        btnStartRead.Location = new Point(3, 558);
+        btnStartRead.Location = new Point(3, 746);
         btnStartRead.Name = "btnStartRead";
-        btnStartRead.Size = new Size(152, 44);
+        btnStartRead.Size = new Size(174, 38);
         btnStartRead.TabIndex = 28;
         btnStartRead.Text = "Sürekli Okuma Başlat";
         btnStartRead.UseVisualStyleBackColor = true;
         // 
+        // cmbWriteDataType
+        // 
+        cmbWriteDataType.Dock = DockStyle.Fill;
+        cmbWriteDataType.FormattingEnabled = true;
+        cmbWriteDataType.Location = new Point(183, 323);
+        cmbWriteDataType.Name = "cmbWriteDataType";
+        cmbWriteDataType.Size = new Size(228, 28);
+        cmbWriteDataType.TabIndex = 34;
+        // 
+        // label15
+        // 
+        label15.AutoSize = true;
+        label15.Dock = DockStyle.Fill;
+        label15.Location = new Point(3, 320);
+        label15.Name = "label15";
+        label15.Size = new Size(174, 40);
+        label15.TabIndex = 33;
+        label15.Text = "W-Data Type";
+        // 
+        // groupBox5
+        // 
+        tlpModBus.SetColumnSpan(groupBox5, 2);
+        groupBox5.Controls.Add(tableLayoutPanel2);
+        groupBox5.Dock = DockStyle.Fill;
+        groupBox5.Location = new Point(3, 363);
+        groupBox5.Name = "groupBox5";
+        groupBox5.Size = new Size(408, 334);
+        groupBox5.TabIndex = 38;
+        groupBox5.TabStop = false;
+        groupBox5.Text = "Sensör Profili";
+        // 
+        // tableLayoutPanel2
+        // 
+        tableLayoutPanel2.ColumnCount = 2;
+        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42.639595F));
+        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 57.360405F));
+        tableLayoutPanel2.Controls.Add(label17, 0, 0);
+        tableLayoutPanel2.Controls.Add(label18, 0, 1);
+        tableLayoutPanel2.Controls.Add(label19, 0, 2);
+        tableLayoutPanel2.Controls.Add(label20, 0, 3);
+        tableLayoutPanel2.Controls.Add(label21, 0, 4);
+        tableLayoutPanel2.Controls.Add(label22, 0, 5);
+        tableLayoutPanel2.Controls.Add(label23, 0, 6);
+        tableLayoutPanel2.Controls.Add(label24, 0, 7);
+        tableLayoutPanel2.Controls.Add(txtSensorName, 1, 0);
+        tableLayoutPanel2.Controls.Add(txtSensorSlave, 1, 1);
+        tableLayoutPanel2.Controls.Add(txtTemperatureRegister, 1, 2);
+        tableLayoutPanel2.Controls.Add(txtTemperatureCoefficient, 1, 3);
+        tableLayoutPanel2.Controls.Add(txtPressureRegister, 1, 4);
+        tableLayoutPanel2.Controls.Add(txtPressureCoefficient, 1, 5);
+        tableLayoutPanel2.Controls.Add(txtHumidityRegister, 1, 6);
+        tableLayoutPanel2.Controls.Add(txtHumidityCoefficient, 1, 7);
+        tableLayoutPanel2.Controls.Add(btnSaveProfile, 0, 10);
+        tableLayoutPanel2.Dock = DockStyle.Fill;
+        tableLayoutPanel2.Location = new Point(3, 23);
+        tableLayoutPanel2.Name = "tableLayoutPanel2";
+        tableLayoutPanel2.RowCount = 10;
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tableLayoutPanel2.Size = new Size(402, 308);
+        tableLayoutPanel2.TabIndex = 0;
+        // 
+        // label17
+        // 
+        label17.AutoSize = true;
+        label17.Dock = DockStyle.Fill;
+        label17.Location = new Point(3, 0);
+        label17.Name = "label17";
+        label17.Size = new Size(165, 30);
+        label17.TabIndex = 0;
+        label17.Text = "Sensör Adı";
+        // 
+        // label18
+        // 
+        label18.AutoSize = true;
+        label18.Dock = DockStyle.Fill;
+        label18.Location = new Point(3, 30);
+        label18.Name = "label18";
+        label18.Size = new Size(165, 30);
+        label18.TabIndex = 1;
+        label18.Text = "Slave ID";
+        // 
+        // label19
+        // 
+        label19.AutoSize = true;
+        label19.Dock = DockStyle.Fill;
+        label19.Location = new Point(3, 60);
+        label19.Name = "label19";
+        label19.Size = new Size(165, 30);
+        label19.TabIndex = 2;
+        label19.Text = "Sıcaklık Register";
+        // 
+        // label20
+        // 
+        label20.AutoSize = true;
+        label20.Dock = DockStyle.Fill;
+        label20.Location = new Point(3, 90);
+        label20.Name = "label20";
+        label20.Size = new Size(165, 30);
+        label20.TabIndex = 3;
+        label20.Text = "Sıcaklık Katsayı";
+        // 
+        // label21
+        // 
+        label21.AutoSize = true;
+        label21.Dock = DockStyle.Fill;
+        label21.Location = new Point(3, 120);
+        label21.Name = "label21";
+        label21.Size = new Size(165, 30);
+        label21.TabIndex = 4;
+        label21.Text = "Basınç Register";
+        // 
+        // label22
+        // 
+        label22.AutoSize = true;
+        label22.Dock = DockStyle.Fill;
+        label22.Location = new Point(3, 150);
+        label22.Name = "label22";
+        label22.Size = new Size(165, 30);
+        label22.TabIndex = 5;
+        label22.Text = "Basınç Katsayı";
+        // 
+        // label23
+        // 
+        label23.AutoSize = true;
+        label23.Dock = DockStyle.Fill;
+        label23.Location = new Point(3, 180);
+        label23.Name = "label23";
+        label23.Size = new Size(165, 30);
+        label23.TabIndex = 6;
+        label23.Text = "Nem Register";
+        // 
+        // label24
+        // 
+        label24.AutoSize = true;
+        label24.Dock = DockStyle.Fill;
+        label24.Location = new Point(3, 210);
+        label24.Name = "label24";
+        label24.Size = new Size(165, 30);
+        label24.TabIndex = 7;
+        label24.Text = "Nem Katsayı";
+        // 
+        // txtSensorName
+        // 
+        txtSensorName.Dock = DockStyle.Fill;
+        txtSensorName.Location = new Point(174, 3);
+        txtSensorName.Name = "txtSensorName";
+        txtSensorName.Size = new Size(225, 27);
+        txtSensorName.TabIndex = 8;
+        // 
+        // txtSensorSlave
+        // 
+        txtSensorSlave.Dock = DockStyle.Fill;
+        txtSensorSlave.Location = new Point(174, 33);
+        txtSensorSlave.Name = "txtSensorSlave";
+        txtSensorSlave.Size = new Size(225, 27);
+        txtSensorSlave.TabIndex = 9;
+        // 
+        // txtTemperatureRegister
+        // 
+        txtTemperatureRegister.Dock = DockStyle.Fill;
+        txtTemperatureRegister.Location = new Point(174, 63);
+        txtTemperatureRegister.Name = "txtTemperatureRegister";
+        txtTemperatureRegister.Size = new Size(225, 27);
+        txtTemperatureRegister.TabIndex = 10;
+        // 
+        // txtTemperatureCoefficient
+        // 
+        txtTemperatureCoefficient.Dock = DockStyle.Fill;
+        txtTemperatureCoefficient.Location = new Point(174, 93);
+        txtTemperatureCoefficient.Name = "txtTemperatureCoefficient";
+        txtTemperatureCoefficient.Size = new Size(225, 27);
+        txtTemperatureCoefficient.TabIndex = 11;
+        // 
+        // txtPressureRegister
+        // 
+        txtPressureRegister.Dock = DockStyle.Fill;
+        txtPressureRegister.Location = new Point(174, 123);
+        txtPressureRegister.Name = "txtPressureRegister";
+        txtPressureRegister.Size = new Size(225, 27);
+        txtPressureRegister.TabIndex = 12;
+        // 
+        // txtPressureCoefficient
+        // 
+        txtPressureCoefficient.Dock = DockStyle.Fill;
+        txtPressureCoefficient.Location = new Point(174, 153);
+        txtPressureCoefficient.Name = "txtPressureCoefficient";
+        txtPressureCoefficient.Size = new Size(225, 27);
+        txtPressureCoefficient.TabIndex = 13;
+        // 
+        // txtHumidityRegister
+        // 
+        txtHumidityRegister.Dock = DockStyle.Fill;
+        txtHumidityRegister.Location = new Point(174, 183);
+        txtHumidityRegister.Name = "txtHumidityRegister";
+        txtHumidityRegister.Size = new Size(225, 27);
+        txtHumidityRegister.TabIndex = 14;
+        // 
+        // txtHumidityCoefficient
+        // 
+        txtHumidityCoefficient.Dock = DockStyle.Fill;
+        txtHumidityCoefficient.Location = new Point(174, 213);
+        txtHumidityCoefficient.Name = "txtHumidityCoefficient";
+        txtHumidityCoefficient.Size = new Size(225, 27);
+        txtHumidityCoefficient.TabIndex = 15;
+        // 
+        // btnSaveProfile
+        // 
+        btnSaveProfile.Dock = DockStyle.Fill;
+        btnSaveProfile.Location = new Point(3, 271);
+        btnSaveProfile.Name = "btnSaveProfile";
+        btnSaveProfile.Size = new Size(165, 34);
+        btnSaveProfile.TabIndex = 16;
+        btnSaveProfile.Text = "Sensörü Kaydet";
+        btnSaveProfile.UseVisualStyleBackColor = true;
+        btnSaveProfile.Click += btnSaveProfile_Click;
+        // 
         // groupBox3
         // 
-        groupBox3.Controls.Add(lblLastReadTime);
-        groupBox3.Controls.Add(lblParsedValue);
-        groupBox3.Controls.Add(lblRawRegisters);
+        groupBox3.Controls.Add(grpSensorValues);
+        groupBox3.Controls.Add(lblLastRead);
+        groupBox3.Controls.Add(lblSensorValue);
+        groupBox3.Controls.Add(lblRawRegister);
         groupBox3.Dock = DockStyle.Fill;
-        groupBox3.Location = new Point(755, 3);
+        groupBox3.Location = new Point(855, 3);
         groupBox3.Name = "groupBox3";
-        groupBox3.Size = new Size(235, 631);
+        groupBox3.Size = new Size(268, 813);
         groupBox3.TabIndex = 4;
         groupBox3.TabStop = false;
         groupBox3.Text = "Okunan Değer";
         // 
-        // lblLastReadTime
+        // grpSensorValues
         // 
-        lblLastReadTime.AutoSize = true;
-        lblLastReadTime.Location = new Point(0, 146);
-        lblLastReadTime.Name = "lblLastReadTime";
-        lblLastReadTime.Size = new Size(106, 20);
-        lblLastReadTime.TabIndex = 2;
-        lblLastReadTime.Text = "Son Okuma:  - ";
+        grpSensorValues.Controls.Add(cmbSensorList);
+        grpSensorValues.Controls.Add(lblSensorLastRead);
+        grpSensorValues.Controls.Add(lblHumidity);
+        grpSensorValues.Controls.Add(lblPressure);
+        grpSensorValues.Controls.Add(lblTemperature);
+        grpSensorValues.Controls.Add(lblActiveSensor);
+        grpSensorValues.Dock = DockStyle.Bottom;
+        grpSensorValues.Location = new Point(3, 290);
+        grpSensorValues.Name = "grpSensorValues";
+        grpSensorValues.Size = new Size(262, 520);
+        grpSensorValues.TabIndex = 3;
+        grpSensorValues.TabStop = false;
+        grpSensorValues.Text = "Sensör Değerleri";
         // 
-        // lblParsedValue
+        // cmbSensorList
         // 
-        lblParsedValue.AutoSize = true;
-        lblParsedValue.Location = new Point(0, 103);
-        lblParsedValue.Name = "lblParsedValue";
-        lblParsedValue.Size = new Size(123, 20);
-        lblParsedValue.TabIndex = 1;
-        lblParsedValue.Text = "Sensör Değeri:  - ";
+        cmbSensorList.Dock = DockStyle.Top;
+        cmbSensorList.FormattingEnabled = true;
+        cmbSensorList.Location = new Point(3, 23);
+        cmbSensorList.Name = "cmbSensorList";
+        cmbSensorList.Size = new Size(256, 28);
+        cmbSensorList.TabIndex = 5;
+        cmbSensorList.Text = "Sensör Seç";
+        cmbSensorList.SelectedIndexChanged += cmbSensorList_SelectedIndexChanged;
         // 
-        // lblRawRegisters
+        // lblSensorLastRead
         // 
-        lblRawRegisters.AutoSize = true;
-        lblRawRegisters.Location = new Point(0, 63);
-        lblRawRegisters.Name = "lblRawRegisters";
-        lblRawRegisters.Size = new Size(116, 20);
-        lblRawRegisters.TabIndex = 0;
-        lblRawRegisters.Text = "Raw Register:  - ";
+        lblSensorLastRead.AutoSize = true;
+        lblSensorLastRead.Location = new Point(8, 215);
+        lblSensorLastRead.Name = "lblSensorLastRead";
+        lblSensorLastRead.Size = new Size(102, 20);
+        lblSensorLastRead.TabIndex = 4;
+        lblSensorLastRead.Text = "Son Okuma: - ";
+        // 
+        // lblHumidity
+        // 
+        lblHumidity.AutoSize = true;
+        lblHumidity.Location = new Point(8, 179);
+        lblHumidity.Name = "lblHumidity";
+        lblHumidity.Size = new Size(58, 20);
+        lblHumidity.TabIndex = 3;
+        lblHumidity.Text = "Nem: - ";
+        // 
+        // lblPressure
+        // 
+        lblPressure.AutoSize = true;
+        lblPressure.Location = new Point(8, 140);
+        lblPressure.Name = "lblPressure";
+        lblPressure.Size = new Size(68, 20);
+        lblPressure.TabIndex = 2;
+        lblPressure.Text = "Basınç: - ";
+        // 
+        // lblTemperature
+        // 
+        lblTemperature.AutoSize = true;
+        lblTemperature.Location = new Point(8, 106);
+        lblTemperature.Name = "lblTemperature";
+        lblTemperature.Size = new Size(71, 20);
+        lblTemperature.TabIndex = 1;
+        lblTemperature.Text = "Sıcaklık: -";
+        // 
+        // lblActiveSensor
+        // 
+        lblActiveSensor.AutoSize = true;
+        lblActiveSensor.Location = new Point(8, 73);
+        lblActiveSensor.Name = "lblActiveSensor";
+        lblActiveSensor.Size = new Size(105, 20);
+        lblActiveSensor.TabIndex = 0;
+        lblActiveSensor.Text = "Aktif Sensör: - ";
+        // 
+        // lblLastRead
+        // 
+        lblLastRead.AutoSize = true;
+        lblLastRead.Location = new Point(0, 146);
+        lblLastRead.Name = "lblLastRead";
+        lblLastRead.Size = new Size(106, 20);
+        lblLastRead.TabIndex = 2;
+        lblLastRead.Text = "Son Okuma:  - ";
+        // 
+        // lblSensorValue
+        // 
+        lblSensorValue.AutoSize = true;
+        lblSensorValue.Location = new Point(0, 103);
+        lblSensorValue.Name = "lblSensorValue";
+        lblSensorValue.Size = new Size(123, 20);
+        lblSensorValue.TabIndex = 1;
+        lblSensorValue.Text = "Sensör Değeri:  - ";
+        // 
+        // lblRawRegister
+        // 
+        lblRawRegister.AutoSize = true;
+        lblRawRegister.Location = new Point(0, 63);
+        lblRawRegister.Name = "lblRawRegister";
+        lblRawRegister.Size = new Size(116, 20);
+        lblRawRegister.TabIndex = 0;
+        lblRawRegister.Text = "Raw Register:  - ";
         // 
         // groupBox1
         // 
@@ -418,7 +731,7 @@ partial class Form1
         groupBox1.Dock = DockStyle.Fill;
         groupBox1.Location = new Point(3, 3);
         groupBox1.Name = "groupBox1";
-        groupBox1.Size = new Size(370, 631);
+        groupBox1.Size = new Size(420, 813);
         groupBox1.TabIndex = 2;
         groupBox1.TabStop = false;
         groupBox1.Text = "Bağlantı Ayarları";
@@ -462,7 +775,7 @@ partial class Form1
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-        tlpConnection.Size = new Size(364, 605);
+        tlpConnection.Size = new Size(414, 787);
         tlpConnection.TabIndex = 0;
         // 
         // label1
@@ -471,7 +784,7 @@ partial class Form1
         label1.Dock = DockStyle.Fill;
         label1.Location = new Point(3, 0);
         label1.Name = "label1";
-        label1.Size = new Size(152, 40);
+        label1.Size = new Size(174, 40);
         label1.TabIndex = 21;
         label1.Text = "Bağlantı Tipi";
         // 
@@ -479,9 +792,9 @@ partial class Form1
         // 
         cmbConnectionType.Dock = DockStyle.Fill;
         cmbConnectionType.FormattingEnabled = true;
-        cmbConnectionType.Location = new Point(161, 3);
+        cmbConnectionType.Location = new Point(183, 3);
         cmbConnectionType.Name = "cmbConnectionType";
-        cmbConnectionType.Size = new Size(200, 28);
+        cmbConnectionType.Size = new Size(228, 28);
         cmbConnectionType.TabIndex = 22;
         // 
         // label4
@@ -490,7 +803,7 @@ partial class Form1
         label4.Dock = DockStyle.Fill;
         label4.Location = new Point(3, 40);
         label4.Name = "label4";
-        label4.Size = new Size(152, 40);
+        label4.Size = new Size(174, 40);
         label4.TabIndex = 26;
         label4.Text = "COM Port";
         // 
@@ -498,9 +811,9 @@ partial class Form1
         // 
         cmbPortName.Dock = DockStyle.Fill;
         cmbPortName.FormattingEnabled = true;
-        cmbPortName.Location = new Point(161, 43);
+        cmbPortName.Location = new Point(183, 43);
         cmbPortName.Name = "cmbPortName";
-        cmbPortName.Size = new Size(200, 28);
+        cmbPortName.Size = new Size(228, 28);
         cmbPortName.TabIndex = 27;
         // 
         // label3
@@ -509,16 +822,16 @@ partial class Form1
         label3.Dock = DockStyle.Fill;
         label3.Location = new Point(3, 80);
         label3.Name = "label3";
-        label3.Size = new Size(152, 40);
+        label3.Size = new Size(174, 40);
         label3.TabIndex = 25;
         label3.Text = "IP Adresi";
         // 
         // txtIpAddress
         // 
         txtIpAddress.Dock = DockStyle.Fill;
-        txtIpAddress.Location = new Point(161, 83);
+        txtIpAddress.Location = new Point(183, 83);
         txtIpAddress.Name = "txtIpAddress";
-        txtIpAddress.Size = new Size(200, 27);
+        txtIpAddress.Size = new Size(228, 27);
         txtIpAddress.TabIndex = 28;
         // 
         // label7
@@ -527,16 +840,16 @@ partial class Form1
         label7.Dock = DockStyle.Fill;
         label7.Location = new Point(3, 120);
         label7.Name = "label7";
-        label7.Size = new Size(152, 40);
+        label7.Size = new Size(174, 40);
         label7.TabIndex = 35;
         label7.Text = "TCP Port";
         // 
         // txtTCPPort
         // 
         txtTCPPort.Dock = DockStyle.Fill;
-        txtTCPPort.Location = new Point(161, 123);
+        txtTCPPort.Location = new Point(183, 123);
         txtTCPPort.Name = "txtTCPPort";
-        txtTCPPort.Size = new Size(200, 27);
+        txtTCPPort.Size = new Size(228, 27);
         txtTCPPort.TabIndex = 36;
         // 
         // label2
@@ -545,7 +858,7 @@ partial class Form1
         label2.Dock = DockStyle.Fill;
         label2.Location = new Point(3, 160);
         label2.Name = "label2";
-        label2.Size = new Size(152, 40);
+        label2.Size = new Size(174, 40);
         label2.TabIndex = 23;
         label2.Text = "BaudRate";
         // 
@@ -553,9 +866,9 @@ partial class Form1
         // 
         cmbBaudRate.Dock = DockStyle.Fill;
         cmbBaudRate.FormattingEnabled = true;
-        cmbBaudRate.Location = new Point(161, 163);
+        cmbBaudRate.Location = new Point(183, 163);
         cmbBaudRate.Name = "cmbBaudRate";
-        cmbBaudRate.Size = new Size(200, 28);
+        cmbBaudRate.Size = new Size(228, 28);
         cmbBaudRate.TabIndex = 37;
         // 
         // label5
@@ -564,7 +877,7 @@ partial class Form1
         label5.Dock = DockStyle.Fill;
         label5.Location = new Point(3, 200);
         label5.Name = "label5";
-        label5.Size = new Size(152, 40);
+        label5.Size = new Size(174, 40);
         label5.TabIndex = 29;
         label5.Text = "DataBits";
         // 
@@ -572,9 +885,9 @@ partial class Form1
         // 
         cmbDataBits.Dock = DockStyle.Fill;
         cmbDataBits.FormattingEnabled = true;
-        cmbDataBits.Location = new Point(161, 203);
+        cmbDataBits.Location = new Point(183, 203);
         cmbDataBits.Name = "cmbDataBits";
-        cmbDataBits.Size = new Size(200, 28);
+        cmbDataBits.Size = new Size(228, 28);
         cmbDataBits.TabIndex = 38;
         // 
         // label6
@@ -583,7 +896,7 @@ partial class Form1
         label6.Dock = DockStyle.Fill;
         label6.Location = new Point(3, 240);
         label6.Name = "label6";
-        label6.Size = new Size(152, 40);
+        label6.Size = new Size(174, 40);
         label6.TabIndex = 30;
         label6.Text = "Parity";
         // 
@@ -591,9 +904,9 @@ partial class Form1
         // 
         cmbParity.Dock = DockStyle.Fill;
         cmbParity.FormattingEnabled = true;
-        cmbParity.Location = new Point(161, 243);
+        cmbParity.Location = new Point(183, 243);
         cmbParity.Name = "cmbParity";
-        cmbParity.Size = new Size(200, 28);
+        cmbParity.Size = new Size(228, 28);
         cmbParity.TabIndex = 24;
         // 
         // StopBits
@@ -602,7 +915,7 @@ partial class Form1
         StopBits.Dock = DockStyle.Fill;
         StopBits.Location = new Point(3, 280);
         StopBits.Name = "StopBits";
-        StopBits.Size = new Size(152, 40);
+        StopBits.Size = new Size(174, 40);
         StopBits.TabIndex = 32;
         StopBits.Text = "Stop Bits";
         // 
@@ -610,18 +923,18 @@ partial class Form1
         // 
         cmbStopBits.Dock = DockStyle.Fill;
         cmbStopBits.FormattingEnabled = true;
-        cmbStopBits.Location = new Point(161, 283);
+        cmbStopBits.Location = new Point(183, 283);
         cmbStopBits.Name = "cmbStopBits";
-        cmbStopBits.Size = new Size(200, 28);
+        cmbStopBits.Size = new Size(228, 28);
         cmbStopBits.TabIndex = 31;
         // 
         // btnConnected
         // 
         btnConnected.Dock = DockStyle.Fill;
-        btnConnected.Location = new Point(6, 561);
+        btnConnected.Location = new Point(6, 743);
         btnConnected.Margin = new Padding(6);
         btnConnected.Name = "btnConnected";
-        btnConnected.Size = new Size(146, 38);
+        btnConnected.Size = new Size(168, 38);
         btnConnected.TabIndex = 38;
         btnConnected.Text = "Bağlan";
         btnConnected.UseVisualStyleBackColor = true;
@@ -629,10 +942,10 @@ partial class Form1
         // btnDisconnected
         // 
         btnDisconnected.Dock = DockStyle.Fill;
-        btnDisconnected.Location = new Point(164, 561);
+        btnDisconnected.Location = new Point(186, 743);
         btnDisconnected.Margin = new Padding(6);
         btnDisconnected.Name = "btnDisconnected";
-        btnDisconnected.Size = new Size(194, 38);
+        btnDisconnected.Size = new Size(222, 38);
         btnDisconnected.TabIndex = 39;
         btnDisconnected.Text = "Bağlantıyı Kes";
         btnDisconnected.UseVisualStyleBackColor = true;
@@ -641,9 +954,9 @@ partial class Form1
         // 
         groupBox4.Controls.Add(tlpLog);
         groupBox4.Dock = DockStyle.Fill;
-        groupBox4.Location = new Point(996, 3);
+        groupBox4.Location = new Point(1129, 3);
         groupBox4.Name = "groupBox4";
-        groupBox4.Size = new Size(344, 631);
+        groupBox4.Size = new Size(391, 813);
         groupBox4.TabIndex = 5;
         groupBox4.TabStop = false;
         groupBox4.Text = "Log Kayıtları";
@@ -652,29 +965,20 @@ partial class Form1
         // 
         tlpLog.ColumnCount = 1;
         tlpLog.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-        tlpLog.Controls.Add(chcLogToFile, 0, 1);
         tlpLog.Controls.Add(txtLog, 0, 0);
+        tlpLog.Controls.Add(chcLogToFile, 0, 1);
+        tlpLog.Controls.Add(btnSelectLogFolder, 0, 3);
+        tlpLog.Controls.Add(lblFilePath, 0, 2);
         tlpLog.Dock = DockStyle.Fill;
         tlpLog.Location = new Point(3, 23);
         tlpLog.Name = "tlpLog";
-        tlpLog.RowCount = 2;
+        tlpLog.RowCount = 4;
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
-        tlpLog.Size = new Size(338, 605);
+        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
+        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
+        tlpLog.Size = new Size(385, 787);
         tlpLog.TabIndex = 0;
-        // 
-        // chcLogToFile
-        // 
-        chcLogToFile.AutoSize = true;
-        chcLogToFile.Checked = true;
-        chcLogToFile.CheckState = CheckState.Checked;
-        chcLogToFile.Dock = DockStyle.Fill;
-        chcLogToFile.Location = new Point(3, 573);
-        chcLogToFile.Name = "chcLogToFile";
-        chcLogToFile.Size = new Size(332, 29);
-        chcLogToFile.TabIndex = 1;
-        chcLogToFile.Text = "Dosyaya Kaydet";
-        chcLogToFile.UseVisualStyleBackColor = true;
         // 
         // txtLog
         // 
@@ -684,14 +988,49 @@ partial class Form1
         txtLog.Name = "txtLog";
         txtLog.ReadOnly = true;
         txtLog.ScrollBars = ScrollBars.Vertical;
-        txtLog.Size = new Size(332, 564);
+        txtLog.Size = new Size(379, 672);
         txtLog.TabIndex = 0;
+        txtLog.Text = "Sensör Seç";
+        // 
+        // chcLogToFile
+        // 
+        chcLogToFile.AutoSize = true;
+        chcLogToFile.Checked = true;
+        chcLogToFile.CheckState = CheckState.Checked;
+        chcLogToFile.Location = new Point(3, 681);
+        chcLogToFile.Name = "chcLogToFile";
+        chcLogToFile.Size = new Size(137, 24);
+        chcLogToFile.TabIndex = 1;
+        chcLogToFile.Text = "Dosyaya Kaydet";
+        chcLogToFile.UseVisualStyleBackColor = true;
+        chcLogToFile.CheckedChanged += chcLogToFile_CheckedChanged;
+        // 
+        // btnSelectLogFolder
+        // 
+        btnSelectLogFolder.Dock = DockStyle.Fill;
+        btnSelectLogFolder.Location = new Point(3, 742);
+        btnSelectLogFolder.Name = "btnSelectLogFolder";
+        btnSelectLogFolder.Size = new Size(379, 42);
+        btnSelectLogFolder.TabIndex = 2;
+        btnSelectLogFolder.Text = "Log Klasörü Seç";
+        btnSelectLogFolder.UseVisualStyleBackColor = true;
+        btnSelectLogFolder.Click += btnSelectLogFolder_Click;
+        // 
+        // lblFilePath
+        // 
+        lblFilePath.AutoSize = true;
+        lblFilePath.Dock = DockStyle.Fill;
+        lblFilePath.Location = new Point(3, 708);
+        lblFilePath.Name = "lblFilePath";
+        lblFilePath.Size = new Size(379, 31);
+        lblFilePath.TabIndex = 6;
+        lblFilePath.Text = "Log Dosya Yolu: - ";
         // 
         // Form1
         // 
         AutoScaleDimensions = new SizeF(8F, 20F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(1343, 637);
+        ClientSize = new Size(1523, 819);
         Controls.Add(tableLayoutPanel1);
         Name = "Form1";
         Text = "Modbus Sensor Reader";
@@ -700,8 +1039,13 @@ partial class Form1
         groupBox2.ResumeLayout(false);
         tlpModBus.ResumeLayout(false);
         tlpModBus.PerformLayout();
+        groupBox5.ResumeLayout(false);
+        tableLayoutPanel2.ResumeLayout(false);
+        tableLayoutPanel2.PerformLayout();
         groupBox3.ResumeLayout(false);
         groupBox3.PerformLayout();
+        grpSensorValues.ResumeLayout(false);
+        grpSensorValues.PerformLayout();
         groupBox1.ResumeLayout(false);
         tlpConnection.ResumeLayout(false);
         tlpConnection.PerformLayout();
@@ -738,9 +1082,9 @@ partial class Form1
     private TextBox txtSlaveId;
     private Label label8;
     private GroupBox groupBox3;
-    private Label lblLastReadTime;
-    private Label lblParsedValue;
-    private Label lblRawRegisters;
+    private Label lblLastRead;
+    private Label lblSensorValue;
+    private Label lblRawRegister;
     private GroupBox groupBox1;
     private GroupBox groupBox4;
     private TextBox txtLog;
@@ -766,4 +1110,32 @@ partial class Form1
     private TableLayoutPanel tlpModBus;
     private CheckBox chcLogToFile;
     private TableLayoutPanel tlpLog;
+    private GroupBox groupBox5;
+    private TableLayoutPanel tableLayoutPanel2;
+    private Label label17;
+    private Label label18;
+    private Label label19;
+    private Label label20;
+    private Label label21;
+    private Label label22;
+    private Label label23;
+    private Label label24;
+    private TextBox txtSensorName;
+    private TextBox txtSensorSlave;
+    private TextBox txtTemperatureRegister;
+    private TextBox txtTemperatureCoefficient;
+    private TextBox txtPressureRegister;
+    private TextBox txtPressureCoefficient;
+    private TextBox txtHumidityRegister;
+    private TextBox txtHumidityCoefficient;
+    private Button btnSaveProfile;
+    private GroupBox grpSensorValues;
+    private Label lblTemperature;
+    private Label lblActiveSensor;
+    private Label lblHumidity;
+    private Label lblPressure;
+    private Label lblSensorLastRead;
+    private Button btnSelectLogFolder;
+    private ComboBox cmbSensorList;
+    private Label lblFilePath;
 }
