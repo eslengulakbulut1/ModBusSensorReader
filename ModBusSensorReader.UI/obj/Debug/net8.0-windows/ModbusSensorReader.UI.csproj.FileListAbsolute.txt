@@ -119,3 +119,4 @@ C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\obj\Debug\
 C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\obj\Debug\net8.0-windows\ModbusSensorReader.UI.pdb
 C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\obj\Debug\net8.0-windows\ModbusSensorReader.UI.genruntimeconfig.cache
 C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\obj\Debug\net8.0-windows\ref\ModbusSensorReader.UI.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\obj\Debug\net8.0-windows\ModbusSensorReader.UI.SensorProfileForm.resources

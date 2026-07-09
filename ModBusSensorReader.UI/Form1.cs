@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.IO;
 using System.Globalization;
 using System.Diagnostics.Metrics;
+using ModbusSensorReader.UI;
 
 public partial class Form1 : Form
 {
@@ -34,15 +35,28 @@ public partial class Form1 : Form
         btnWrite.Click += btnWrite_Click;
         btnStartRead.Click += btnStartRead_Click;
         btnStop.Click += btnStop_Click;
+        btnAddSensor.Click += btnAddSensor_Click;
 
     }
-
-
 
     // Form yüklendiğinde combobox ve textbox değerlerini ayarlama kısmı.
     private void Form1_Load(object sender, EventArgs e)
     {
+        InitializeSensorParameterGrid();
         btnStop.Enabled = false;
+
+        // form yüklendiğinde comboboxların dropdownlist olarak ayarlanması sağlanır. Bu sayede ekran büyütüldüğünde mavi seçili alanlar gelmez.
+        cmbConnectionType.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbPortName.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbParity.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbStopBits.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbFuncCode.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbDataType.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbBaudRate.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbDataBits.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbWriteDataType.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbSensorList.DropDownStyle = ComboBoxStyle.DropDownList;
+        //
 
         cmbConnectionType.Items.AddRange(new string[] { "RTU", "TCP" });
         cmbConnectionType.SelectedItem = "RTU";
@@ -87,6 +101,8 @@ public partial class Form1 : Form
         });
         cmbDataType.SelectedIndex = 0;
 
+
+        // Baud Rate ve Data Bits seçeneklerini combobox'a ekleme
         cmbBaudRate.Items.AddRange(new object[]
         {
             "9600",
@@ -131,11 +147,85 @@ public partial class Form1 : Form
         txtWriteValue.Text = "0";
 
 
-
         Log("Form yüklendi.");
+        LoadDefaultSensorProfiles();
 
         cmbFuncCode_SelectedIndexChanged(null, EventArgs.Empty);
 
+        dgvSensorParameters.DataError += dgvSensorParameters_DataError;
+
+        BeginInvoke(new Action(ClearUiSelection));
+
+    }
+
+    // DataGridView üzerinde veri hatası oluştuğunda exception fırlatılmasını engeller ve kullanıcıya hata mesajı göstermez.
+    private void dgvSensorParameters_DataError(object? sender, DataGridViewDataErrorEventArgs e)
+    {
+        e.ThrowException = false;
+    }
+
+    // Sayfa ilk yüklendiğinde default değer olarak MAWS sensörünün bilgileri yazdırılır.
+    private void LoadDefaultSensorProfiles()
+    {
+        if (_sensorProfiles.Any(p => p.SensorName == "MAWS"))
+            return;
+
+        SensorProfile mawsProfile = new SensorProfile
+        {
+            SensorName = "MAWS",
+            SlaveId = 1,
+            Parameters = new List<SensorParameter>
+            {
+                new SensorParameter { ParameterName = "Sıcaklık", Unit = "°C", Coefficient = 0},
+                new SensorParameter { ParameterName = "Basınç", Unit = "hPa", Coefficient = 0},
+                new SensorParameter { ParameterName = "Rüzgar Hızı", Unit =  "m/s", Coefficient = 0 },
+                new SensorParameter { ParameterName = "Rüzgar Yönü", Unit = "°", Coefficient = 0 }
+            }
+
+        };
+
+        _sensorProfiles.Add(mawsProfile);
+        RefreshSensorList();
+        cmbSensorList.SelectedItem = mawsProfile.SensorName;
+    }
+
+    // Sensör ekleme butonuna tıklandığında yeni sensör profili oluşturmak için SensorProfileForm formunu açar ve kullanıcıdan sensördeki parametre bilgilerini alır.
+    private void btnAddSensor_Click(object? sender, EventArgs e)
+    {
+        using SensorProfileForm form = new SensorProfileForm();
+
+        if (form.ShowDialog() != DialogResult.OK)
+            return;
+
+        if (form.CreatedProfile == null)
+            return;
+
+        bool exists = _sensorProfiles.Any(p =>
+            p.SensorName.Equals(form.CreatedProfile.SensorName, StringComparison.OrdinalIgnoreCase));
+
+        if (exists)
+        {
+            MessageBox.Show("Bu isimde bir sensör zaten var.");
+            return;
+        }
+
+        _sensorProfiles.Add(form.CreatedProfile);
+
+        RefreshSensorList();
+
+        cmbSensorList.SelectedItem = form.CreatedProfile.SensorName;
+
+    }
+
+
+    // Sensör listesi combobox'ını günceller ve kullanıcıya mevcut sensör profillerini gösterir.
+    private void RefreshSensorList()
+    {
+        cmbSensorList.Items.Clear();
+        foreach (var profile in _sensorProfiles)
+        {
+            cmbSensorList.Items.Add(profile.SensorName);
+        }
     }
 
     // Form gösterildiğinde log dosyasına kayıt yapılacaksa kullanıcıya log klasörü seçmesi için uyarı verir.
@@ -151,7 +241,14 @@ public partial class Form1 : Form
             );
 
             SelectLogFolder();
+            this.ActiveControl = btnConnected;
         }
+    }
+
+    // Form yeniden boyutlandırıldığında DataGridView üzerindeki seçimi temizler ve odaklanmayı "Bağlan" butonuna verir.
+    private void Form1_Resize(object sender, EventArgs e)
+    {
+        BeginInvoke(new Action(ClearUiSelection));
     }
 
     // fonksiyonların bulunduğu checkbox seçildiğinde ilgili alanları etkinleştirir veya devre dışı bırakır.
@@ -177,7 +274,7 @@ public partial class Form1 : Form
         UpdateWriteFieldsByFunctionCode();
     }
 
-    // Sürelli okuma başladığında diğer alanların pasifleşmesi
+    // Sürekli okuma başladığında diğer alanların pasifleşmesi
     private void SetModbusSettingsEnabled(bool enabled)
     {
         // Bağlantı ayarları ve okuma/yazma alanlarını etkinleştir veya devre dışı bırak
@@ -194,15 +291,9 @@ public partial class Form1 : Form
         // Sensör alanlarını da devre dışı bırak
         txtSensorName.Enabled = enabled;
         txtSensorSlave.Enabled = enabled;
-        txtTemperatureRegister.Enabled = enabled;
-        txtTemperatureCoefficient.Enabled = enabled;
-        txtPressureRegister.Enabled = enabled;
-        txtPressureCoefficient.Enabled = enabled;
-        txtHumidityRegister.Enabled = enabled;
-        txtHumidityCoefficient.Enabled = enabled;
         btnSaveProfile.Enabled = enabled;
     }
-    // Sürekli okuma için timer tick eventi
+    // Sürekli okuma için timer tick eventi. Bu event her tick olduğunda ReadModbus fonksiyonunu çağırır ve okuma işlemini gerçekleştirir.
     private void ReadTimer_Tick(object? sender, EventArgs e)
     {
         _readTimer.Stop();
@@ -216,6 +307,7 @@ public partial class Form1 : Form
             _readTimer.Start();
         }
     }
+
     // Loglama fonksiyonu, txtLog TextBox'ına mesajları ekler ve zaman damgası ekler.
     private void Log(string message)
     {
@@ -292,7 +384,7 @@ public partial class Form1 : Form
         Log("Sürekli okuma durduruldu.");
     }
 
-    // Fonksiyon koduna göre 
+    // Fonksiyon koduna göre alanları günceller. Read, write fonksiyonları arasındaki ayrımı yapar. 
     private void UpdateWriteFieldsByFunctionCode()
     {
         int functionCode = GetSelectedFunctionCode();
@@ -330,7 +422,6 @@ public partial class Form1 : Form
 
             Log("Okuma başarılı. Değer: " + result.ParsedValue);
 
-            // Sensör profili varsa sıcaklık / basınç / nem değerlerini de oku
             if (selectedProfile != null)
             {
                 ReadSensorProfileValues();
@@ -441,6 +532,7 @@ public partial class Form1 : Form
 
     }
 
+    // "Write" butonuna tıklandığında Modbus yazma işlemini başlatır.
     private void btnWrite_Click(object sender, EventArgs e)
     {
         WriteModbus();
@@ -450,97 +542,23 @@ public partial class Form1 : Form
     // Sensör kaydetme butonuna tıklandığında kullanıcı tarafından girilen sensör profilini kaydeder veya günceller.
     private void btnSaveProfile_Click(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(txtSensorName.Text))
+        if (selectedProfile == null)
         {
-            Log("Sensör adı boş bırakılamaz.");
+            MessageBox.Show("Önce bir sensör seçmelisiniz.");
             return;
         }
 
-        if (!byte.TryParse(txtSensorSlave.Text, out byte slaveId))
-        {
-            Log("Slave ID geçersiz.");
-            return;
-        }
+        selectedProfile.SensorName = txtSensorName.Text.Trim();
 
-        if (!int.TryParse(txtTemperatureRegister.Text, out int temperatureRegister))
-        {
-            Log("Sıcaklık register değeri geçersiz.");
-            return;
-        }
+        if (byte.TryParse(txtSensorSlave.Text, out byte slaveId))
+            selectedProfile.SlaveId = slaveId;
 
-        if (!TryParseCoefficient(txtTemperatureCoefficient.Text, out double temperatureCoefficient))
-        {
-            Log("Sıcaklık katsayı değeri geçersiz.");
-            return;
-        }
+        SaveGridValuesToSelectedProfile();
 
-        if (!int.TryParse(txtPressureRegister.Text, out int pressureRegister))
-        {
-            Log("Basınç register değeri geçersiz.");
-            return;
-        }
-
-        if (!TryParseCoefficient(txtPressureCoefficient.Text, out double pressureCoefficient))
-        {
-            Log("Basınç katsayı değeri geçersiz.");
-            return;
-        }
-
-        if (!int.TryParse(txtHumidityRegister.Text, out int humidityRegister))
-        {
-            Log("Nem register değeri geçersiz.");
-            return;
-        }
-
-        if (!TryParseCoefficient(txtHumidityCoefficient.Text, out double humidityCoefficient))
-        {
-            Log("Nem katsayı değeri geçersiz.");
-            return;
-        }
-
-        var newProfile = new SensorProfile
-        {
-            SensorName = txtSensorName.Text.Trim(),
-            SlaveId = slaveId,
-
-            TemperatureRegister = temperatureRegister,
-            TemperatureCoefficient = temperatureCoefficient,
-
-            PressureRegister = pressureRegister,
-            PressureCoefficient = pressureCoefficient,
-
-            HumidityRegister = humidityRegister,
-            HumidityCoefficient = humidityCoefficient
-        };
-
-        var existingProfile = _sensorProfiles
-            .FirstOrDefault(x => x.SensorName == newProfile.SensorName);
-
-        if (existingProfile != null)
-        {
-            existingProfile.SlaveId = newProfile.SlaveId;
-            existingProfile.TemperatureRegister = newProfile.TemperatureRegister;
-            existingProfile.TemperatureCoefficient = newProfile.TemperatureCoefficient;
-            existingProfile.PressureRegister = newProfile.PressureRegister;
-            existingProfile.PressureCoefficient = newProfile.PressureCoefficient;
-            existingProfile.HumidityRegister = newProfile.HumidityRegister;
-            existingProfile.HumidityCoefficient = newProfile.HumidityCoefficient;
-
-            selectedProfile = existingProfile;
-
-            Log("Sensör profili güncellendi: " + selectedProfile.SensorName);
-        }
-        else
-        {
-            _sensorProfiles.Add(newProfile);
-            cmbSensorList.Items.Add(newProfile.SensorName);
-
-            selectedProfile = newProfile;
-
-            Log("Sensör profili kaydedildi: " + selectedProfile.SensorName);
-        }
-
+        RefreshSensorList();
         cmbSensorList.SelectedItem = selectedProfile.SensorName;
+
+        Log("Sensör profili güncellendi: " + selectedProfile.SensorName);
     }
 
     // Kullanıcı tarafından girilen katsayı değerlerini double tipine dönüştürür. Virgül veya nokta ile ayrılmış sayıları destekler.
@@ -558,28 +576,75 @@ public partial class Form1 : Form
     {
         if (selectedProfile == null)
         {
-            Log("Önce sensör profili kaydedilmelidir.");
+            Log("Önce sensör profili seçilmelidir.");
             return;
         }
 
-        ushort tempRaw = ReadSingleRegister(selectedProfile.TemperatureRegister);
-        ushort pressureRaw = ReadSingleRegister(selectedProfile.PressureRegister);
-        ushort humidityRaw = ReadSingleRegister(selectedProfile.HumidityRegister);
+        SaveGridValuesToSelectedProfile();
 
-        double temperature = tempRaw * selectedProfile.TemperatureCoefficient;
-        double pressure = pressureRaw * selectedProfile.PressureCoefficient;
-        double humidity = humidityRaw * selectedProfile.HumidityCoefficient;
+        List<string> valueTexts = new List<string>();
 
-        lblRawRegister.Text =
-            $"Raw Register: T={tempRaw}, P={pressureRaw}, H={humidityRaw}";
+        if (selectedProfile.Parameters == null || selectedProfile.Parameters.Count == 0)
+        {
+            Log("Seçili sensöre ait parametre bulunamadı.");
+            return;
+        }
+
+        // Her bir parametre için Modbus üzerinden register değerini okur, katsayıyı uygular ve UI üzerinde gösterir.
+
+        foreach (var parameter in selectedProfile.Parameters)
+        {
+            ushort rawValue = ReadSingleRegister(parameter.RegisterAddress);
+
+            double calculatedValue = rawValue * parameter.Coefficient;
+
+            parameter.RawValue = rawValue.ToString();
+            parameter.CalculatedValue = calculatedValue.ToString("0.##") + " " + parameter.Unit;
+
+            valueTexts.Add($"{parameter.ParameterName}: {parameter.CalculatedValue}");
+        }
+
+        LoadSelectedSensorToGrid();
 
         lblActiveSensor.Text = "Aktif Sensör: " + selectedProfile.SensorName;
-        lblTemperature.Text = $"Sıcaklık: {temperature} °C";
-        lblPressure.Text = $"Basınç: {pressure} bar";
-        lblHumidity.Text = $"Nem: {humidity} %";
         lblSensorLastRead.Text = "Son Okuma: " + DateTime.Now.ToString("HH:mm:ss");
 
-        Log($"{selectedProfile.SensorName} okundu → Sıcaklık: {temperature} °C, Basınç: {pressure} bar, Nem: {humidity} %");
+        Log($"{selectedProfile.SensorName} okundu → " + string.Join(", ", valueTexts));
+    }
+
+    // DataGridView üzerindeki değerleri seçili sensör profilinin parametrelerine kaydeder.
+    private void SaveGridValuesToSelectedProfile()
+    {
+        if (selectedProfile == null)
+            return;
+
+        foreach (DataGridViewRow row in dgvSensorParameters.Rows)
+        {
+            if (row.IsNewRow)
+                continue;
+
+            string parameterName = row.Cells["ParameterName"].Value?.ToString() ?? "";
+
+            SensorParameter? parameter = selectedProfile.Parameters
+                .FirstOrDefault(p => p.ParameterName == parameterName);
+
+            if (parameter == null)
+                continue;
+
+            int.TryParse(
+                row.Cells["RegisterAddress"].Value?.ToString(),
+                out int registerAddress
+            );
+
+            TryParseCoefficient(
+                row.Cells["Coefficient"].Value?.ToString() ?? "1",
+                out double coefficient
+            );
+
+            parameter.RegisterAddress = registerAddress;
+            parameter.Coefficient = coefficient;
+            parameter.Unit = row.Cells["Unit"].Value?.ToString() ?? "";
+        }
     }
 
     // Modbus üzerinden tek bir register okur ve ushort tipinde döner.
@@ -671,18 +736,69 @@ public partial class Form1 : Form
             return;
         }
 
-        txtSensorName.Text = selectedProfile.SensorName;
-        txtSensorSlave.Text = selectedProfile.SlaveId.ToString();
-
-        txtTemperatureRegister.Text = selectedProfile.TemperatureRegister.ToString();
-        txtTemperatureCoefficient.Text = selectedProfile.TemperatureCoefficient.ToString();
-
-        txtPressureRegister.Text = selectedProfile.PressureRegister.ToString();
-        txtPressureCoefficient.Text = selectedProfile.PressureCoefficient.ToString();
-
-        txtHumidityRegister.Text = selectedProfile.HumidityRegister.ToString();
-        txtHumidityCoefficient.Text = selectedProfile.HumidityCoefficient.ToString();
+        LoadSelectedSensorToGrid();
 
         Log("Aktif sensör seçildi: " + selectedProfile.SensorName);
+    }
+
+    //DataGrid yapısı ile sensör parametrelerini ekleme, silme ve düzenleme işlemlerini sağlar.
+    private void InitializeSensorParameterGrid()
+    {
+        dgvSensorParameters.Columns.Clear();
+
+        dgvSensorParameters.Columns.Add("ParameterName", "Parametre");
+        dgvSensorParameters.Columns.Add("RegisterAddress", "Register");
+        dgvSensorParameters.Columns.Add("Coefficient", "Katsayı");
+        DataGridViewComboBoxColumn unitColumn = new DataGridViewComboBoxColumn();
+        unitColumn.Name = "Unit";
+        unitColumn.HeaderText = "Birim";
+        unitColumn.Items.AddRange("","°C", "hPa", "%", "m/s", "°", "mm", "V", "A", "Pa", "rpm");
+        dgvSensorParameters.Columns.Add(unitColumn);
+
+
+        dgvSensorParameters.Columns.Add("RawValue", "Ham Değer");
+        dgvSensorParameters.Columns.Add("CalculatedValue", "Sonuç");
+
+        dgvSensorParameters.Columns["ParameterName"].ReadOnly = true;
+        dgvSensorParameters.Columns["RawValue"].ReadOnly = true;
+        dgvSensorParameters.Columns["CalculatedValue"].ReadOnly = true;
+    }
+
+    // Sensör listesinden sensörü seçince parametreleri doldur
+    private void LoadSelectedSensorToGrid()
+    {
+        dgvSensorParameters.Rows.Clear();
+
+        if (selectedProfile == null)
+            return;
+
+
+        foreach (var parameter in selectedProfile.Parameters)
+        {
+            dgvSensorParameters.Rows.Add(
+                parameter.ParameterName,
+                parameter.RegisterAddress,
+                parameter.Coefficient,
+                parameter.Unit,
+                parameter.RawValue,
+                parameter.CalculatedValue
+            );
+        }
+
+        lblActiveSensor.Text = "Aktif Sensör: " + selectedProfile.SensorName;
+        txtSensorSlave.Text = selectedProfile.SlaveId.ToString();
+        txtSensorName.Text = selectedProfile.SensorName;
+
+        dgvSensorParameters.ClearSelection();
+        dgvSensorParameters.CurrentCell = null;
+    }
+
+    // DataGridView üzerindeki seçimi temizler ve odaklanmayı "Bağlan" butonuna verir.
+    private void ClearUiSelection()
+    {
+        dgvSensorParameters.ClearSelection();
+        dgvSensorParameters.CurrentCell = null;
+
+        btnConnected.Focus();
     }
 }

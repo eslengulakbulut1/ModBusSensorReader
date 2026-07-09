@@ -56,29 +56,18 @@ partial class Form1
         groupBox5 = new GroupBox();
         tableLayoutPanel2 = new TableLayoutPanel();
         label17 = new Label();
-        label18 = new Label();
-        label19 = new Label();
-        label20 = new Label();
-        label21 = new Label();
-        label22 = new Label();
-        label23 = new Label();
-        label24 = new Label();
         txtSensorName = new TextBox();
+        label18 = new Label();
         txtSensorSlave = new TextBox();
-        txtTemperatureRegister = new TextBox();
-        txtTemperatureCoefficient = new TextBox();
-        txtPressureRegister = new TextBox();
-        txtPressureCoefficient = new TextBox();
-        txtHumidityRegister = new TextBox();
-        txtHumidityCoefficient = new TextBox();
+        lblParameterTitle = new Label();
+        dgvSensorParameters = new DataGridView();
+        buttonPanel = new TableLayoutPanel();
+        btnAddSensor = new Button();
         btnSaveProfile = new Button();
         groupBox3 = new GroupBox();
         grpSensorValues = new GroupBox();
         cmbSensorList = new ComboBox();
         lblSensorLastRead = new Label();
-        lblHumidity = new Label();
-        lblPressure = new Label();
-        lblTemperature = new Label();
         lblActiveSensor = new Label();
         lblLastRead = new Label();
         lblSensorValue = new Label();
@@ -114,6 +103,8 @@ partial class Form1
         tlpModBus.SuspendLayout();
         groupBox5.SuspendLayout();
         tableLayoutPanel2.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)dgvSensorParameters).BeginInit();
+        buttonPanel.SuspendLayout();
         groupBox3.SuspendLayout();
         grpSensorValues.SuspendLayout();
         groupBox1.SuspendLayout();
@@ -138,7 +129,7 @@ partial class Form1
         tableLayoutPanel1.Name = "tableLayoutPanel1";
         tableLayoutPanel1.RowCount = 1;
         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        tableLayoutPanel1.Size = new Size(1523, 819);
+        tableLayoutPanel1.Size = new Size(1523, 855);
         tableLayoutPanel1.TabIndex = 0;
         // 
         // groupBox2
@@ -147,7 +138,7 @@ partial class Form1
         groupBox2.Dock = DockStyle.Fill;
         groupBox2.Location = new Point(429, 3);
         groupBox2.Name = "groupBox2";
-        groupBox2.Size = new Size(420, 813);
+        groupBox2.Size = new Size(420, 849);
         groupBox2.TabIndex = 3;
         groupBox2.TabStop = false;
         groupBox2.Text = "ModBus İşlem Ayarları";
@@ -197,7 +188,7 @@ partial class Form1
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 43F));
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpModBus.Size = new Size(414, 787);
+        tlpModBus.Size = new Size(414, 823);
         tlpModBus.TabIndex = 0;
         // 
         // txtSamplingTime
@@ -221,7 +212,7 @@ partial class Form1
         // btnWrite
         // 
         btnWrite.Dock = DockStyle.Fill;
-        btnWrite.Location = new Point(183, 703);
+        btnWrite.Location = new Point(183, 739);
         btnWrite.Name = "btnWrite";
         btnWrite.Size = new Size(228, 37);
         btnWrite.TabIndex = 35;
@@ -231,7 +222,7 @@ partial class Form1
         // btnStop
         // 
         btnStop.Dock = DockStyle.Fill;
-        btnStop.Location = new Point(183, 746);
+        btnStop.Location = new Point(183, 782);
         btnStop.Name = "btnStop";
         btnStop.Size = new Size(228, 38);
         btnStop.TabIndex = 27;
@@ -259,7 +250,7 @@ partial class Form1
         // btnRead
         // 
         btnRead.Dock = DockStyle.Fill;
-        btnRead.Location = new Point(3, 703);
+        btnRead.Location = new Point(3, 739);
         btnRead.Name = "btnRead";
         btnRead.Size = new Size(174, 37);
         btnRead.TabIndex = 19;
@@ -379,7 +370,7 @@ partial class Form1
         // btnStartRead
         // 
         btnStartRead.Dock = DockStyle.Fill;
-        btnStartRead.Location = new Point(3, 746);
+        btnStartRead.Location = new Point(3, 782);
         btnStartRead.Name = "btnStartRead";
         btnStartRead.Size = new Size(174, 38);
         btnStartRead.TabIndex = 28;
@@ -412,7 +403,7 @@ partial class Form1
         groupBox5.Dock = DockStyle.Fill;
         groupBox5.Location = new Point(3, 363);
         groupBox5.Name = "groupBox5";
-        groupBox5.Size = new Size(408, 334);
+        groupBox5.Size = new Size(408, 370);
         groupBox5.TabIndex = 38;
         groupBox5.TabStop = false;
         groupBox5.Text = "Sensör Profili";
@@ -420,41 +411,25 @@ partial class Form1
         // tableLayoutPanel2
         // 
         tableLayoutPanel2.ColumnCount = 2;
-        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42.639595F));
-        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 57.360405F));
+        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65F));
         tableLayoutPanel2.Controls.Add(label17, 0, 0);
-        tableLayoutPanel2.Controls.Add(label18, 0, 1);
-        tableLayoutPanel2.Controls.Add(label19, 0, 2);
-        tableLayoutPanel2.Controls.Add(label20, 0, 3);
-        tableLayoutPanel2.Controls.Add(label21, 0, 4);
-        tableLayoutPanel2.Controls.Add(label22, 0, 5);
-        tableLayoutPanel2.Controls.Add(label23, 0, 6);
-        tableLayoutPanel2.Controls.Add(label24, 0, 7);
         tableLayoutPanel2.Controls.Add(txtSensorName, 1, 0);
+        tableLayoutPanel2.Controls.Add(label18, 0, 1);
         tableLayoutPanel2.Controls.Add(txtSensorSlave, 1, 1);
-        tableLayoutPanel2.Controls.Add(txtTemperatureRegister, 1, 2);
-        tableLayoutPanel2.Controls.Add(txtTemperatureCoefficient, 1, 3);
-        tableLayoutPanel2.Controls.Add(txtPressureRegister, 1, 4);
-        tableLayoutPanel2.Controls.Add(txtPressureCoefficient, 1, 5);
-        tableLayoutPanel2.Controls.Add(txtHumidityRegister, 1, 6);
-        tableLayoutPanel2.Controls.Add(txtHumidityCoefficient, 1, 7);
-        tableLayoutPanel2.Controls.Add(btnSaveProfile, 0, 10);
+        tableLayoutPanel2.Controls.Add(lblParameterTitle, 0, 2);
+        tableLayoutPanel2.Controls.Add(dgvSensorParameters, 0, 3);
+        tableLayoutPanel2.Controls.Add(buttonPanel, 0, 4);
         tableLayoutPanel2.Dock = DockStyle.Fill;
         tableLayoutPanel2.Location = new Point(3, 23);
         tableLayoutPanel2.Name = "tableLayoutPanel2";
-        tableLayoutPanel2.RowCount = 10;
+        tableLayoutPanel2.RowCount = 5;
         tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
         tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tableLayoutPanel2.Size = new Size(402, 308);
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
+        tableLayoutPanel2.Size = new Size(402, 344);
         tableLayoutPanel2.TabIndex = 0;
         // 
         // label17
@@ -463,9 +438,17 @@ partial class Form1
         label17.Dock = DockStyle.Fill;
         label17.Location = new Point(3, 0);
         label17.Name = "label17";
-        label17.Size = new Size(165, 30);
+        label17.Size = new Size(134, 30);
         label17.TabIndex = 0;
         label17.Text = "Sensör Adı";
+        // 
+        // txtSensorName
+        // 
+        txtSensorName.Dock = DockStyle.Fill;
+        txtSensorName.Location = new Point(143, 3);
+        txtSensorName.Name = "txtSensorName";
+        txtSensorName.Size = new Size(256, 27);
+        txtSensorName.TabIndex = 8;
         // 
         // label18
         // 
@@ -473,140 +456,78 @@ partial class Form1
         label18.Dock = DockStyle.Fill;
         label18.Location = new Point(3, 30);
         label18.Name = "label18";
-        label18.Size = new Size(165, 30);
+        label18.Size = new Size(134, 30);
         label18.TabIndex = 1;
         label18.Text = "Slave ID";
-        // 
-        // label19
-        // 
-        label19.AutoSize = true;
-        label19.Dock = DockStyle.Fill;
-        label19.Location = new Point(3, 60);
-        label19.Name = "label19";
-        label19.Size = new Size(165, 30);
-        label19.TabIndex = 2;
-        label19.Text = "Sıcaklık Register";
-        // 
-        // label20
-        // 
-        label20.AutoSize = true;
-        label20.Dock = DockStyle.Fill;
-        label20.Location = new Point(3, 90);
-        label20.Name = "label20";
-        label20.Size = new Size(165, 30);
-        label20.TabIndex = 3;
-        label20.Text = "Sıcaklık Katsayı";
-        // 
-        // label21
-        // 
-        label21.AutoSize = true;
-        label21.Dock = DockStyle.Fill;
-        label21.Location = new Point(3, 120);
-        label21.Name = "label21";
-        label21.Size = new Size(165, 30);
-        label21.TabIndex = 4;
-        label21.Text = "Basınç Register";
-        // 
-        // label22
-        // 
-        label22.AutoSize = true;
-        label22.Dock = DockStyle.Fill;
-        label22.Location = new Point(3, 150);
-        label22.Name = "label22";
-        label22.Size = new Size(165, 30);
-        label22.TabIndex = 5;
-        label22.Text = "Basınç Katsayı";
-        // 
-        // label23
-        // 
-        label23.AutoSize = true;
-        label23.Dock = DockStyle.Fill;
-        label23.Location = new Point(3, 180);
-        label23.Name = "label23";
-        label23.Size = new Size(165, 30);
-        label23.TabIndex = 6;
-        label23.Text = "Nem Register";
-        // 
-        // label24
-        // 
-        label24.AutoSize = true;
-        label24.Dock = DockStyle.Fill;
-        label24.Location = new Point(3, 210);
-        label24.Name = "label24";
-        label24.Size = new Size(165, 30);
-        label24.TabIndex = 7;
-        label24.Text = "Nem Katsayı";
-        // 
-        // txtSensorName
-        // 
-        txtSensorName.Dock = DockStyle.Fill;
-        txtSensorName.Location = new Point(174, 3);
-        txtSensorName.Name = "txtSensorName";
-        txtSensorName.Size = new Size(225, 27);
-        txtSensorName.TabIndex = 8;
         // 
         // txtSensorSlave
         // 
         txtSensorSlave.Dock = DockStyle.Fill;
-        txtSensorSlave.Location = new Point(174, 33);
+        txtSensorSlave.Location = new Point(143, 33);
         txtSensorSlave.Name = "txtSensorSlave";
-        txtSensorSlave.Size = new Size(225, 27);
+        txtSensorSlave.Size = new Size(256, 27);
         txtSensorSlave.TabIndex = 9;
         // 
-        // txtTemperatureRegister
+        // lblParameterTitle
         // 
-        txtTemperatureRegister.Dock = DockStyle.Fill;
-        txtTemperatureRegister.Location = new Point(174, 63);
-        txtTemperatureRegister.Name = "txtTemperatureRegister";
-        txtTemperatureRegister.Size = new Size(225, 27);
-        txtTemperatureRegister.TabIndex = 10;
+        lblParameterTitle.AutoSize = true;
+        tableLayoutPanel2.SetColumnSpan(lblParameterTitle, 2);
+        lblParameterTitle.Dock = DockStyle.Fill;
+        lblParameterTitle.Location = new Point(3, 60);
+        lblParameterTitle.Name = "lblParameterTitle";
+        lblParameterTitle.Size = new Size(396, 25);
+        lblParameterTitle.TabIndex = 10;
+        lblParameterTitle.Text = "Parametre Ayarları";
         // 
-        // txtTemperatureCoefficient
+        // dgvSensorParameters
         // 
-        txtTemperatureCoefficient.Dock = DockStyle.Fill;
-        txtTemperatureCoefficient.Location = new Point(174, 93);
-        txtTemperatureCoefficient.Name = "txtTemperatureCoefficient";
-        txtTemperatureCoefficient.Size = new Size(225, 27);
-        txtTemperatureCoefficient.TabIndex = 11;
+        dgvSensorParameters.AllowUserToAddRows = false;
+        dgvSensorParameters.AllowUserToDeleteRows = false;
+        dgvSensorParameters.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        dgvSensorParameters.BackgroundColor = SystemColors.Window;
+        dgvSensorParameters.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        tableLayoutPanel2.SetColumnSpan(dgvSensorParameters, 2);
+        dgvSensorParameters.Dock = DockStyle.Fill;
+        dgvSensorParameters.Location = new Point(3, 88);
+        dgvSensorParameters.Name = "dgvSensorParameters";
+        dgvSensorParameters.RowHeadersVisible = false;
+        dgvSensorParameters.RowHeadersWidth = 51;
+        dgvSensorParameters.ScrollBars = ScrollBars.Vertical;
+        dgvSensorParameters.Size = new Size(396, 215);
+        dgvSensorParameters.TabIndex = 11;
         // 
-        // txtPressureRegister
+        // buttonPanel
         // 
-        txtPressureRegister.Dock = DockStyle.Fill;
-        txtPressureRegister.Location = new Point(174, 123);
-        txtPressureRegister.Name = "txtPressureRegister";
-        txtPressureRegister.Size = new Size(225, 27);
-        txtPressureRegister.TabIndex = 12;
+        buttonPanel.ColumnCount = 2;
+        tableLayoutPanel2.SetColumnSpan(buttonPanel, 2);
+        buttonPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        buttonPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        buttonPanel.Controls.Add(btnAddSensor, 0, 0);
+        buttonPanel.Controls.Add(btnSaveProfile, 1, 0);
+        buttonPanel.Dock = DockStyle.Fill;
+        buttonPanel.Location = new Point(3, 309);
+        buttonPanel.Name = "buttonPanel";
+        buttonPanel.RowCount = 1;
+        buttonPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+        buttonPanel.Size = new Size(396, 32);
+        buttonPanel.TabIndex = 12;
         // 
-        // txtPressureCoefficient
+        // btnAddSensor
         // 
-        txtPressureCoefficient.Dock = DockStyle.Fill;
-        txtPressureCoefficient.Location = new Point(174, 153);
-        txtPressureCoefficient.Name = "txtPressureCoefficient";
-        txtPressureCoefficient.Size = new Size(225, 27);
-        txtPressureCoefficient.TabIndex = 13;
-        // 
-        // txtHumidityRegister
-        // 
-        txtHumidityRegister.Dock = DockStyle.Fill;
-        txtHumidityRegister.Location = new Point(174, 183);
-        txtHumidityRegister.Name = "txtHumidityRegister";
-        txtHumidityRegister.Size = new Size(225, 27);
-        txtHumidityRegister.TabIndex = 14;
-        // 
-        // txtHumidityCoefficient
-        // 
-        txtHumidityCoefficient.Dock = DockStyle.Fill;
-        txtHumidityCoefficient.Location = new Point(174, 213);
-        txtHumidityCoefficient.Name = "txtHumidityCoefficient";
-        txtHumidityCoefficient.Size = new Size(225, 27);
-        txtHumidityCoefficient.TabIndex = 15;
+        btnAddSensor.Dock = DockStyle.Fill;
+        btnAddSensor.Location = new Point(3, 3);
+        btnAddSensor.Name = "btnAddSensor";
+        btnAddSensor.Size = new Size(192, 26);
+        btnAddSensor.TabIndex = 17;
+        btnAddSensor.Text = "Yeni Sensör";
+        btnAddSensor.UseVisualStyleBackColor = true;
         // 
         // btnSaveProfile
         // 
         btnSaveProfile.Dock = DockStyle.Fill;
-        btnSaveProfile.Location = new Point(3, 271);
+        btnSaveProfile.Location = new Point(201, 3);
         btnSaveProfile.Name = "btnSaveProfile";
-        btnSaveProfile.Size = new Size(165, 34);
+        btnSaveProfile.Size = new Size(192, 26);
         btnSaveProfile.TabIndex = 16;
         btnSaveProfile.Text = "Sensörü Kaydet";
         btnSaveProfile.UseVisualStyleBackColor = true;
@@ -621,7 +542,7 @@ partial class Form1
         groupBox3.Dock = DockStyle.Fill;
         groupBox3.Location = new Point(855, 3);
         groupBox3.Name = "groupBox3";
-        groupBox3.Size = new Size(268, 813);
+        groupBox3.Size = new Size(268, 849);
         groupBox3.TabIndex = 4;
         groupBox3.TabStop = false;
         groupBox3.Text = "Okunan Değer";
@@ -630,12 +551,9 @@ partial class Form1
         // 
         grpSensorValues.Controls.Add(cmbSensorList);
         grpSensorValues.Controls.Add(lblSensorLastRead);
-        grpSensorValues.Controls.Add(lblHumidity);
-        grpSensorValues.Controls.Add(lblPressure);
-        grpSensorValues.Controls.Add(lblTemperature);
         grpSensorValues.Controls.Add(lblActiveSensor);
         grpSensorValues.Dock = DockStyle.Bottom;
-        grpSensorValues.Location = new Point(3, 290);
+        grpSensorValues.Location = new Point(3, 326);
         grpSensorValues.Name = "grpSensorValues";
         grpSensorValues.Size = new Size(262, 520);
         grpSensorValues.TabIndex = 3;
@@ -656,38 +574,11 @@ partial class Form1
         // lblSensorLastRead
         // 
         lblSensorLastRead.AutoSize = true;
-        lblSensorLastRead.Location = new Point(8, 215);
+        lblSensorLastRead.Location = new Point(8, 102);
         lblSensorLastRead.Name = "lblSensorLastRead";
         lblSensorLastRead.Size = new Size(102, 20);
         lblSensorLastRead.TabIndex = 4;
         lblSensorLastRead.Text = "Son Okuma: - ";
-        // 
-        // lblHumidity
-        // 
-        lblHumidity.AutoSize = true;
-        lblHumidity.Location = new Point(8, 179);
-        lblHumidity.Name = "lblHumidity";
-        lblHumidity.Size = new Size(58, 20);
-        lblHumidity.TabIndex = 3;
-        lblHumidity.Text = "Nem: - ";
-        // 
-        // lblPressure
-        // 
-        lblPressure.AutoSize = true;
-        lblPressure.Location = new Point(8, 140);
-        lblPressure.Name = "lblPressure";
-        lblPressure.Size = new Size(68, 20);
-        lblPressure.TabIndex = 2;
-        lblPressure.Text = "Basınç: - ";
-        // 
-        // lblTemperature
-        // 
-        lblTemperature.AutoSize = true;
-        lblTemperature.Location = new Point(8, 106);
-        lblTemperature.Name = "lblTemperature";
-        lblTemperature.Size = new Size(71, 20);
-        lblTemperature.TabIndex = 1;
-        lblTemperature.Text = "Sıcaklık: -";
         // 
         // lblActiveSensor
         // 
@@ -731,7 +622,7 @@ partial class Form1
         groupBox1.Dock = DockStyle.Fill;
         groupBox1.Location = new Point(3, 3);
         groupBox1.Name = "groupBox1";
-        groupBox1.Size = new Size(420, 813);
+        groupBox1.Size = new Size(420, 849);
         groupBox1.TabIndex = 2;
         groupBox1.TabStop = false;
         groupBox1.Text = "Bağlantı Ayarları";
@@ -775,7 +666,7 @@ partial class Form1
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-        tlpConnection.Size = new Size(414, 787);
+        tlpConnection.Size = new Size(414, 823);
         tlpConnection.TabIndex = 0;
         // 
         // label1
@@ -931,7 +822,7 @@ partial class Form1
         // btnConnected
         // 
         btnConnected.Dock = DockStyle.Fill;
-        btnConnected.Location = new Point(6, 743);
+        btnConnected.Location = new Point(6, 779);
         btnConnected.Margin = new Padding(6);
         btnConnected.Name = "btnConnected";
         btnConnected.Size = new Size(168, 38);
@@ -942,7 +833,7 @@ partial class Form1
         // btnDisconnected
         // 
         btnDisconnected.Dock = DockStyle.Fill;
-        btnDisconnected.Location = new Point(186, 743);
+        btnDisconnected.Location = new Point(186, 779);
         btnDisconnected.Margin = new Padding(6);
         btnDisconnected.Name = "btnDisconnected";
         btnDisconnected.Size = new Size(222, 38);
@@ -956,7 +847,7 @@ partial class Form1
         groupBox4.Dock = DockStyle.Fill;
         groupBox4.Location = new Point(1129, 3);
         groupBox4.Name = "groupBox4";
-        groupBox4.Size = new Size(391, 813);
+        groupBox4.Size = new Size(391, 849);
         groupBox4.TabIndex = 5;
         groupBox4.TabStop = false;
         groupBox4.Text = "Log Kayıtları";
@@ -977,7 +868,7 @@ partial class Form1
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-        tlpLog.Size = new Size(385, 787);
+        tlpLog.Size = new Size(385, 823);
         tlpLog.TabIndex = 0;
         // 
         // txtLog
@@ -988,7 +879,7 @@ partial class Form1
         txtLog.Name = "txtLog";
         txtLog.ReadOnly = true;
         txtLog.ScrollBars = ScrollBars.Vertical;
-        txtLog.Size = new Size(379, 672);
+        txtLog.Size = new Size(379, 708);
         txtLog.TabIndex = 0;
         txtLog.Text = "Sensör Seç";
         // 
@@ -997,7 +888,7 @@ partial class Form1
         chcLogToFile.AutoSize = true;
         chcLogToFile.Checked = true;
         chcLogToFile.CheckState = CheckState.Checked;
-        chcLogToFile.Location = new Point(3, 681);
+        chcLogToFile.Location = new Point(3, 717);
         chcLogToFile.Name = "chcLogToFile";
         chcLogToFile.Size = new Size(137, 24);
         chcLogToFile.TabIndex = 1;
@@ -1008,7 +899,7 @@ partial class Form1
         // btnSelectLogFolder
         // 
         btnSelectLogFolder.Dock = DockStyle.Fill;
-        btnSelectLogFolder.Location = new Point(3, 742);
+        btnSelectLogFolder.Location = new Point(3, 778);
         btnSelectLogFolder.Name = "btnSelectLogFolder";
         btnSelectLogFolder.Size = new Size(379, 42);
         btnSelectLogFolder.TabIndex = 2;
@@ -1020,7 +911,7 @@ partial class Form1
         // 
         lblFilePath.AutoSize = true;
         lblFilePath.Dock = DockStyle.Fill;
-        lblFilePath.Location = new Point(3, 708);
+        lblFilePath.Location = new Point(3, 744);
         lblFilePath.Name = "lblFilePath";
         lblFilePath.Size = new Size(379, 31);
         lblFilePath.TabIndex = 6;
@@ -1030,7 +921,7 @@ partial class Form1
         // 
         AutoScaleDimensions = new SizeF(8F, 20F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(1523, 819);
+        ClientSize = new Size(1523, 855);
         Controls.Add(tableLayoutPanel1);
         Name = "Form1";
         Text = "Modbus Sensor Reader";
@@ -1042,6 +933,8 @@ partial class Form1
         groupBox5.ResumeLayout(false);
         tableLayoutPanel2.ResumeLayout(false);
         tableLayoutPanel2.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)dgvSensorParameters).EndInit();
+        buttonPanel.ResumeLayout(false);
         groupBox3.ResumeLayout(false);
         groupBox3.PerformLayout();
         grpSensorValues.ResumeLayout(false);
@@ -1081,10 +974,6 @@ partial class Form1
     private Label label9;
     private TextBox txtSlaveId;
     private Label label8;
-    private GroupBox groupBox3;
-    private Label lblLastRead;
-    private Label lblSensorValue;
-    private Label lblRawRegister;
     private GroupBox groupBox1;
     private GroupBox groupBox4;
     private TextBox txtLog;
@@ -1114,28 +1003,21 @@ partial class Form1
     private TableLayoutPanel tableLayoutPanel2;
     private Label label17;
     private Label label18;
-    private Label label19;
-    private Label label20;
-    private Label label21;
-    private Label label22;
-    private Label label23;
-    private Label label24;
     private TextBox txtSensorName;
     private TextBox txtSensorSlave;
-    private TextBox txtTemperatureRegister;
-    private TextBox txtTemperatureCoefficient;
-    private TextBox txtPressureRegister;
-    private TextBox txtPressureCoefficient;
-    private TextBox txtHumidityRegister;
-    private TextBox txtHumidityCoefficient;
     private Button btnSaveProfile;
-    private GroupBox grpSensorValues;
-    private Label lblTemperature;
-    private Label lblActiveSensor;
-    private Label lblHumidity;
-    private Label lblPressure;
-    private Label lblSensorLastRead;
     private Button btnSelectLogFolder;
-    private ComboBox cmbSensorList;
     private Label lblFilePath;
+    private Button btnAddSensor;
+    private Label lblParameterTitle;
+    private TableLayoutPanel buttonPanel;
+    private GroupBox groupBox3;
+    private GroupBox grpSensorValues;
+    private ComboBox cmbSensorList;
+    private Label lblSensorLastRead;
+    private Label lblActiveSensor;
+    private Label lblLastRead;
+    private Label lblSensorValue;
+    private Label lblRawRegister;
+    private DataGridView dgvSensorParameters;
 }
