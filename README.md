@@ -1,227 +1,120 @@
 # Modbus Sensor Reader
 
-## Proje Hakkında
+## Proje Amacı
 
-Modbus Sensor Reader, Modbus RTU ve Modbus TCP haberleşme protokollerini kullanarak sensör veya PLC cihazlarından veri okumak ve Modbus slave cihazlarına veri yazmak amacıyla geliştirilmiş bir Windows Forms uygulamasıdır.
+Modbus Sensor Reader, Modbus RTU ve Modbus TCP üzerinden haberleşen farklı sensörlerden veri okumak ve yönetmek amacıyla geliştirilmiş masaüstü uygulamasıdır.
 
-Uygulama NModbus kütüphanesini kullanarak farklı Modbus Function Code'larını desteklemektedir. Kullanıcı arayüzü üzerinden bağlantı parametreleri, okuma ve yazma ayarları dinamik olarak yapılandırılabilir.
+Uygulamanın temel amacı, farklı üreticilere ait sensörlerin sabit bir yapıya bağlı kalmadan dinamik olarak tanımlanabilmesini sağlamaktır. Her sensör kendi parametrelerini, register adreslerini, katsayılarını ve birimlerini kullanıcı tarafından oluşturulabilen sensör profilleri ile yönetebilir.
+
+Bu sayede uygulama yalnızca belirli bir sensöre değil, Modbus protokolünü kullanan farklı sensör tiplerine uyarlanabilir hale gelmiştir.
 
 ---
 
-# Özellikler
-
-## Bağlantı
+# Temel Özellikler
 
 - Modbus RTU desteği
 - Modbus TCP desteği
-- COM Port seçimi
-- BaudRate seçimi
-- DataBits seçimi
-- Parity seçimi
-- StopBits seçimi
-- Slave ID seçimi
+- Tek seferlik veri okuma
+- Sürekli veri okuma
+- Modbus register yazma işlemleri
+- Birden fazla register'a yazabilme
+- Farklı veri tiplerini destekleme
+  - UInt16
+  - Int16
+  - UInt32
+  - Int32
+  - Float
+  - Double
 
 ---
 
-## Desteklenen Function Code'lar
+# Sensör Profil Sistemi
 
-### Okuma
+Uygulamanın en önemli özelliği dinamik sensör profil yapısıdır.
 
-- 01 - Read Coil Status
-- 02 - Read Input Status
-- 03 - Read Holding Registers
-- 04 - Read Input Registers
+Her sensör için;
 
-### Yazma
-
-- 05 - Write Single Coil
-- 06 - Write Single Register
-- 15 - Write Multiple Coils
-- 16 - Write Multiple Registers
-
----
-
-## Desteklenen Veri Tipleri
-
-### Okuma
-
-- UInt16
-- Int16
-- UInt32
-- Int32
-
-### Yazma
-
-- Bool
-- UInt16
-- Int16
-- UInt32
-- Int32
-- Float
-- Double
-
----
-
-# Kullanıcı Arayüzü
-
-Uygulama dört ana bölümden oluşmaktadır.
-
-## 1. Bağlantı Ayarları
-
-Bu bölümde;
-
-- Bağlantı tipi
-- COM Port
-- TCP/IP bilgileri
-- BaudRate
-- DataBits
-- Parity
-- StopBits
-
-ayarları yapılmaktadır.
-
----
-
-## 2. ModBus İşlem Ayarları
-
-Bu bölümde;
-
+- Sensör Adı
 - Slave ID
-- Function Code
-- Register Count
-- Sampling Time
-- Read Start Address
-- Read Data Type
-- Write Address
-- Write Value
-- Write Data Type
+- Parametre Listesi
 
-alanları bulunmaktadır.
-
-Seçilen Function Code'a göre ilgili okuma veya yazma alanları otomatik olarak aktif/pasif hale gelmektedir.
-
----
-
-## 3. Okunan Değer
-
-Okuma sonucunda;
-
-- Ham Register Verisi
-- Parse Edilmiş Sensör Verisi
-- Son Okuma Zamanı
-
-gösterilmektedir.
-
----
-
-## 4. Log Kayıtları
-
-Gerçekleşen tüm işlemler;
-
-- Bağlantı
-- Okuma
-- Yazma
-- Hatalar
-
-anlık olarak görüntülenmektedir.
-
-İstenirse "Dosyaya Kaydet" seçeneği ile loglar otomatik olarak txt dosyasına kaydedilmektedir.
-
----
-
-# Sürekli Okuma
-
-Sampling Time alanına girilen saniye değerine göre uygulama belirlenen aralıklarla otomatik olarak Modbus okuma işlemini gerçekleştirmektedir.
-
-Örnek:
-
-Sampling Time = 2
-
-→ Her 2 saniyede bir okuma yapılır.
-
----
-
-# Multiple Register Yazma
-
-16 - Write Multiple Registers fonksiyonu geliştirilmiştir.
-
-Tek bir istekte;
-
-Adresler
-
-0,1,2,3
-
-Değerler
-
-100,200,300,400
-
-şeklinde girilerek birden fazla register aynı anda yazılabilmektedir.
-
----
-
-# Veri Dönüştürme
-
-Okunan register verileri seçilen veri tipine göre dönüştürülmektedir.
+tanımlanabilir.
 
 Örneğin;
 
-- UInt16
-- Int16
-- UInt32
-- Int32
+MAWS
 
-tipleri desteklenmektedir.
+- Sıcaklık
+- Basınç
+- Nem
+- Rüzgar Hızı
+- Rüzgar Yönü
 
-Yazma işlemlerinde ise;
+veya
 
-- UInt16
-- Int16
-- UInt32
-- Int32
-- Float
-- Double
+BOSCH
 
-veri tipleri kullanılabilmektedir.
+- Sıcaklık
+- Gaz Yoğunluğu
+
+şeklinde tamamen farklı parametreler oluşturulabilir.
+
+Her parametre için;
+
+- Register Adresi
+- Katsayı
+- Birim
+
+bilgileri kullanıcı tarafından belirlenebilir.
 
 ---
 
-# Log Sistemi
+# Veri Okuma
 
-Uygulama içerisinde gerçekleşen tüm işlemler zaman damgası ile kayıt altına alınmaktadır.
+Seçilen sensör profiline göre;
+
+- Register okunur
+- Ham değer alınır
+- Katsayı uygulanır
+- Sonuç hesaplanır
+
+ve uygulama içerisinde görüntülenir.
 
 Örnek;
 
-```
-[10:45:15] Bağlantı ayarları hazırlandı.
-[10:45:17] Okuma başarılı.
-[10:45:20] Yazma işlemi başarılı.
-```
-
-Loglar isteğe bağlı olarak;
-
-```
-Desktop
- └── staj
-      └── Log
-            └── ModbusLog_YYYYMMDD.txt
-```
-
-konumuna otomatik kaydedilmektedir.
+| Parametre | Register | Ham Değer | Katsayı | Sonuç |
+|-----------|----------|-----------|----------|--------|
+| Sıcaklık | 0 | 253 | 0.1 | 25.3 °C |
+| Basınç | 1 | 1013 | 1 | 1013 hPa |
 
 ---
 
-# Responsive Arayüz
+# Desteklenen Modbus Fonksiyonları
 
-Arayüz yeniden düzenlenmiştir.
+Okuma
 
-Yapılan geliştirmeler;
+- FC01 - Read Coil Status
+- FC02 - Read Input Status
+- FC03 - Read Holding Register
+- FC04 - Read Input Register
 
-- TableLayoutPanel kullanımı
-- Responsive pencere yapısı
-- Dock = Fill düzeni
-- Dinamik GroupBox yerleşimi
-- Butonların responsive hizalanması
-- Log alanının otomatik genişlemesi
+Yazma
+
+- FC05 - Write Single Coil
+- FC06 - Write Single Register
+- FC15 - Write Multiple Coils
+- FC16 - Write Multiple Registers
+
+---
+
+# Kullanım Akışı
+
+1. Bağlantı tipi seçilir (RTU / TCP)
+2. Bağlantı bilgileri girilir.
+3. Sensör profili seçilir.
+4. Register ve katsayı bilgileri tanımlanır.
+5. Veri okunur.
+6. Ham ve hesaplanan değerler görüntülenir.
 
 ---
 
@@ -231,67 +124,28 @@ Yapılan geliştirmeler;
 - .NET Windows Forms
 - NModbus
 - SerialPort
-- TCP/IP
 - Modbus RTU
 - Modbus TCP
 
 ---
 
-# Proje Yapısı
-
-```
-ModBusSensorReader
-
-│
-├── UI
-│     Form1
-│
-├── Library
-│     Services
-│         ModbusReaderServices.cs
-│
-│     Models
-│         ModbusReadRequest.cs
-│         ModbusReadResult.cs
-│
-└── README.md
-```
-
----
-
-# Geliştirme Sürecinde Yapılan Başlıca Çalışmalar
-
-- Modbus RTU haberleşmesi oluşturuldu.
-- Modbus TCP haberleşmesi oluşturuldu.
-- Function Code yönetimi geliştirildi.
-- Sürekli okuma (Timer) sistemi geliştirildi.
-- Log sistemi oluşturuldu.
-- Txt dosyasına log kaydetme özelliği eklendi.
-- Responsive kullanıcı arayüzü geliştirildi.
-- Multiple Register Write desteği eklendi.
-- Birden fazla register adresine aynı anda veri yazma desteği geliştirildi.
-- Veri tipi dönüşümleri geliştirildi.
-- Bağlantı yönetimi iyileştirildi.
-- Hata yönetimi ve kullanıcı bilgilendirme sistemi geliştirildi.
-
----
-
 # Gelecek Geliştirmeler
 
-- Float ve Double veri tiplerinin tüm Function Code'larda tam desteklenmesi
-- Word Swap / Byte Swap seçenekleri
-- Modbus Mapping ekranı
-- CSV/Excel veri aktarımı
-- Grafiksel veri izleme
-- PLC Tag yönetimi
-- Konfigürasyon dosyası desteği
-- Tema (Dark / Light Mode)
-- Çoklu Slave desteği
-- Bağlantı profili kaydetme
-- Alarm ve uyarı sistemi
+- Sensör profillerini JSON dosyasında saklama
+- Sensör profili düzenleme
+- Sensör silme
+- Parametre bazlı veri tipi seçimi
+- Alarm limitleri
+- Grafiksel veri gösterimi
+- CSV / Excel veri aktarımı
+- Gerçek zamanlı trend ekranı
 
 ---
 
-# Lisans
+# Hedef
 
-Bu proje staj süreci kapsamında geliştirilmiştir.
+Bu proje, farklı marka ve model Modbus sensörlerini tek bir uygulama üzerinden yönetebilen, genişletilebilir ve kullanıcı tarafından özelleştirilebilir bir sensör okuma platformu oluşturmayı amaçlamaktadır.
+
+---
+
+# Bu proje staj sürecinde geliştirilmektedir.
