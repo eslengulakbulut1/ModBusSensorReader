@@ -6,6 +6,17 @@ using System.IO;
 using System.Globalization;
 using System.Diagnostics.Metrics;
 using ModbusSensorReader.UI;
+using System.Drawing.Text;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore;
+using System.Collections.ObjectModel;
+using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.Measure;
+using SkiaSharp;
+using LiveChartsCore.Defaults;
+using System.Collections.Generic;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 
 public partial class Form1 : Form
 {
@@ -14,13 +25,32 @@ public partial class Form1 : Form
     private readonly System.Windows.Forms.Timer _readTimer = new System.Windows.Forms.Timer();
     private readonly System.Windows.Forms.Timer _writeTimer = new System.Windows.Forms.Timer();
 
+    private readonly ContextMenuStrip _chartContextMenu =
+    new ContextMenuStrip();
+
+    private readonly ToolStripMenuItem _saveChartMenuItem =
+        new ToolStripMenuItem("Grafiği Kaydet");
+
+    private string _logFilePath = "";
+
+    // Loglama sırasında UI güncellemelerini engellemek için kullanılan flag. Bu sayede log eklenirken UI'nin güncellenmesi engellenir ve performans artar.
+    private bool _updatingLogControls = false;
+
     // SensorProfile listesi, kullanıcı tarafından tanımlanan sensör profillerini saklar.
     private readonly List<SensorProfile> _sensorProfiles = new List<SensorProfile>();
     private SensorProfile? selectedProfile;
 
+    // Grafik değişimleri
+    private CartesianChart sensorChart = new CartesianChart();
+    private readonly Dictionary<string, LineSeries<DateTimePoint>> chartSeries =
+    new Dictionary<string, LineSeries<DateTimePoint>>();
+    private const int MaxChartPoints = 50;
+
     private bool _isConnected = false;
 
     private string _logFolderPath = "";
+
+    // form1 class'ı.
     public Form1()
     {
         InitializeComponent();
@@ -43,6 +73,7 @@ public partial class Form1 : Form
     private void Form1_Load(object sender, EventArgs e)
     {
         InitializeSensorParameterGrid();
+        InitializeSensorChart();
         btnStop.Enabled = false;
 
         // form yüklendiğinde comboboxların dropdownlist olarak ayarlanması sağlanır. Bu sayede ekran büyütüldüğünde mavi seçili alanlar gelmez.
@@ -147,10 +178,21 @@ public partial class Form1 : Form
         txtWriteValue.Text = "0";
 
 
-        Log("Form yüklendi.");
         LoadDefaultSensorProfiles();
+        RefreshSensorList();
+
+        if (_sensorProfiles.Count > 0)
+        {
+            //selectedProfile = _sensorProfiles[0];
+            cmbSensorList.SelectedIndex = 0;
+
+            //LoadSelectedSensorToGrid();
+           // CreateChartSeries();
+        }
 
         cmbFuncCode_SelectedIndexChanged(null, EventArgs.Empty);
+
+        Log("Form yüklendi.");
 
         dgvSensorParameters.DataError += dgvSensorParameters_DataError;
 
@@ -158,11 +200,234 @@ public partial class Form1 : Form
 
     }
 
+    // Grafik alanını başlatır ve gerekli ayarları yapar. X ve Y eksenlerini, tooltip ve legend ayarlarını içerir.
+    private void InitializeSensorChart()
+    {
+        sensorChart.Dock = DockStyle.Fill;
+
+        sensorChart.BackColor = Color.White;
+
+        sensorChart.LegendPosition = LegendPosition.Top;
+        sensorChart.LegendTextSize = 12;
+
+        sensorChart.TooltipPosition = TooltipPosition.Top;
+        sensorChart.TooltipFindingStrategy =
+            LiveChartsCore.Measure.TooltipFindingStrategy.CompareAllTakeClosest;
+
+        sensorChart.ZoomMode = ZoomAndPanMode.X;
+        sensorChart.DrawMarginFrame = new DrawMarginFrame
+        {
+            Fill = null,
+            Stroke = new SolidColorPaint(
+                new SKColor(225, 225, 225),
+                1)
+        };
+
+        sensorChart.XAxes = new[]
+        {
+            new DateTimeAxis(
+                TimeSpan.FromSeconds(1),
+                date => date.ToString("HH:mm:ss"))
+            {
+                Name = "Okuma Zamanı",
+
+                TextSize = 11,
+
+                LabelsPaint = new SolidColorPaint(
+                    new SKColor(90, 90, 90)),
+
+                NamePaint = new SolidColorPaint(
+                    new SKColor(55, 55, 55)),
+
+                SeparatorsPaint = new SolidColorPaint(
+                    new SKColor(230, 230, 230),
+                    1),
+
+                TicksPaint = null,
+                SubticksPaint = null,
+
+                MinStep = TimeSpan.FromSeconds(1).Ticks
+            }
+        };
+
+        sensorChart.YAxes = new[]
+        {
+            new Axis
+            {
+                Name = "Değer",
+
+                TextSize = 11,
+
+                LabelsPaint = new SolidColorPaint(
+                    new SKColor(90, 90, 90)),
+
+                NamePaint = new SolidColorPaint(
+                    new SKColor(55, 55, 55)),
+
+                SeparatorsPaint = new SolidColorPaint(
+                    new SKColor(230, 230, 230),
+                    1),
+
+                TicksPaint = null,
+                SubticksPaint = null
+            }
+        };
+
+        grpGraph.Controls.Clear();
+        grpGraph.Controls.Add(sensorChart);
+
+        InitializeChartContextMenu();
+    }
+
+    // Log durumunu güncelleyen ortak metot
+    private void UpdateLogControls()
+    {
+        _updatingLogControls = true;
+
+        try
+        {
+            bool hasLogFile =
+                !string.IsNullOrWhiteSpace(_logFilePath);
+
+            chcLogToFile.Checked = hasLogFile;
+
+            if (hasLogFile)
+            {
+                lblFilePath.Text =
+                    "Log dosyası: " + _logFilePath;
+
+                lblFilePath.AutoEllipsis = true;
+
+                btnSelectLogFolder.Text =
+                    "Log Dosyasını Değiştir";
+            }
+            else
+            {
+                lblFilePath.Text =
+                    "Log dosyası: -----";
+
+                btnSelectLogFolder.Text =
+                    "Log Dosyası Seç";
+            }
+        }
+        finally
+        {
+            _updatingLogControls = false;
+        }
+    }
+
+    // Grafik menüsünü hazırlayan metot
+    private void InitializeChartContextMenu()
+    {
+        _chartContextMenu.Items.Clear();
+
+        _saveChartMenuItem.Text = "Grafiği Kaydet";
+        _saveChartMenuItem.Click -= SaveChartMenuItem_Click;
+        _saveChartMenuItem.Click += SaveChartMenuItem_Click;
+
+        _chartContextMenu.Items.Add(_saveChartMenuItem);
+
+        sensorChart.ContextMenuStrip = _chartContextMenu;
+    }
+
+
+    // Grafiği kaydetme menü öğesine tıklandığında SaveCurrentChartImage fonksiyonunu çağırır.
+    private void SaveChartMenuItem_Click(object? sender, EventArgs e)
+    {
+        SaveCurrentChartImage();
+    }
+
+    // Grafiği kaydetme işlemini gerçekleştiren metot. Kullanıcıya dosya kaydetme dialog'u açar ve grafiği PNG formatında kaydeder.
+    private void SaveCurrentChartImage()
+    {
+        if (sensorChart.Series == null ||
+            !sensorChart.Series.Any())
+        {
+            MessageBox.Show(
+                "Kaydedilecek grafik verisi bulunamadı.",
+                "Grafik Kaydet",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+
+            return;
+        }
+
+        using SaveFileDialog dialog = new SaveFileDialog();
+
+        dialog.Title = "Grafik görüntüsünü kaydet";
+        dialog.Filter = "PNG Görüntüsü (*.png)|*.png";
+        dialog.DefaultExt = "png";
+        dialog.AddExtension = true;
+
+        string sensorName =
+            selectedProfile?.SensorName ?? "Sensor";
+
+        string safeSensorName =
+            MakeSafeFileName(sensorName);
+
+        dialog.FileName =
+            $"{safeSensorName}_Grafik_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+
+        if (dialog.ShowDialog() != DialogResult.OK)
+            return;
+
+        try
+        {
+            int chartWidth = Math.Max(sensorChart.Width, 900);
+            int chartHeight = Math.Max(sensorChart.Height, 600);
+
+            SKCartesianChart chartImage =
+                new SKCartesianChart(sensorChart)
+                {
+                    Width = chartWidth,
+                    Height = chartHeight
+                };
+
+            chartImage.SaveImage(dialog.FileName);
+
+            MessageBox.Show(
+                "Grafik başarıyla kaydedildi.",
+                "Grafik Kaydet",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+
+            Log("Grafik görüntüsü kaydedildi: " + dialog.FileName);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                "Grafik kaydedilemedi:\n" + ex.Message,
+                "Grafik Kaydetme Hatası",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+
+            Log("Grafik kaydetme hatası: " + ex.Message);
+        }
+    }
+
+
+    // Dosya adında geçersiz karakterleri alt çizgi ile değiştirir. Bu sayede dosya adı geçerli hale gelir.
+    private string MakeSafeFileName(string fileName)
+    {
+        foreach (char invalidCharacter in
+                 Path.GetInvalidFileNameChars())
+        {
+            fileName =
+                fileName.Replace(
+                    invalidCharacter,
+                    '_');
+        }
+
+        return fileName;
+    }
+
+
     // DataGridView üzerinde veri hatası oluştuğunda exception fırlatılmasını engeller ve kullanıcıya hata mesajı göstermez.
     private void dgvSensorParameters_DataError(object? sender, DataGridViewDataErrorEventArgs e)
     {
         e.ThrowException = false;
     }
+
 
     // Sayfa ilk yüklendiğinde default değer olarak MAWS sensörünün bilgileri yazdırılır.
     private void LoadDefaultSensorProfiles()
@@ -175,19 +440,147 @@ public partial class Form1 : Form
             SensorName = "MAWS",
             SlaveId = 1,
             Parameters = new List<SensorParameter>
-            {
-                new SensorParameter { ParameterName = "Sıcaklık", Unit = "°C", Coefficient = 0},
-                new SensorParameter { ParameterName = "Basınç", Unit = "hPa", Coefficient = 0},
-                new SensorParameter { ParameterName = "Rüzgar Hızı", Unit =  "m/s", Coefficient = 0 },
-                new SensorParameter { ParameterName = "Rüzgar Yönü", Unit = "°", Coefficient = 0 }
-            }
-
+        {
+            new SensorParameter { ParameterName = "Sıcaklık", RegisterAddress = 0, Coefficient = 1, Unit = "°C" },
+            new SensorParameter { ParameterName = "Basınç", RegisterAddress = 0, Coefficient = 1, Unit = "hPa" },
+            new SensorParameter { ParameterName = "Rüzgar Hızı", RegisterAddress = 0, Coefficient = 1, Unit = "m/s" },
+            new SensorParameter { ParameterName = "Rüzgar Yönü", RegisterAddress = 0, Coefficient = 1, Unit = "°" }
+        }
         };
 
         _sensorProfiles.Add(mawsProfile);
-        RefreshSensorList();
-        cmbSensorList.SelectedItem = mawsProfile.SensorName;
     }
+
+
+    // Grafik serisinin oluşturulması ve her parametre için ayrı bir çizgi serisi eklenmesi. Renkler döngüsel olarak atanır.
+    private void CreateChartSeries()
+    {
+        chartSeries.Clear();
+
+        if (selectedProfile?.Parameters == null ||
+            selectedProfile.Parameters.Count == 0)
+        {
+            sensorChart.Series = Array.Empty<ISeries>();
+            return;
+        }
+
+        List<ISeries> seriesList = new List<ISeries>();
+
+        SKColor[] seriesColors =
+        {
+        new SKColor(33, 150, 243),  // Mavi
+        new SKColor(244, 67, 54),   // Kırmızı
+        new SKColor(139, 195, 74),  // Yeşil
+        new SKColor(255, 152, 0),   // Turuncu
+        new SKColor(156, 39, 176),  // Mor
+        new SKColor(0, 188, 212)    // Turkuaz
+    };
+
+        int colorIndex = 0;
+
+        // Seçili sensör profilindeki her parametre için
+        // ayrı bir çizgi serisi oluşturulur.
+        foreach (SensorParameter parameter in selectedProfile.Parameters)
+        {
+            if (string.IsNullOrWhiteSpace(parameter.ParameterName))
+                continue;
+
+            SKColor color =
+                seriesColors[colorIndex % seriesColors.Length];
+
+            // Her parametrenin grafik değerlerini ayrı koleksiyonda tutar.
+            ObservableCollection<DateTimePoint> parameterValues =
+                new ObservableCollection<DateTimePoint>();
+
+            LineSeries<DateTimePoint> lineSeries =
+                new LineSeries<DateTimePoint>
+                {
+                    Name =
+                        $"{parameter.ParameterName} ({parameter.Unit})",
+
+                    Values = parameterValues,
+
+                    // Çizgi görünümü
+                    Stroke = new SolidColorPaint(color)
+                    {
+                        StrokeThickness = 1.5f
+                    },
+
+                    // Çizginin altındaki dolguyu kaldırır.
+                    Fill = null,
+
+                    // Grafik noktalarının boyutu
+                    GeometrySize = 4,
+
+                    GeometryFill =
+                        new SolidColorPaint(color),
+
+                    GeometryStroke =
+                        new SolidColorPaint(color)
+                        {
+                            StrokeThickness = 1
+                        },
+
+                    // Çizgilerin düz olmasını sağlar.
+                    LineSmoothness = 0,
+
+                    // Tooltip içinde okuma zamanını gösterir.
+                    XToolTipLabelFormatter = point =>
+                    {
+                        DateTime? readTime =
+                            point.Model?.DateTime;
+
+                        return readTime.HasValue
+                            ? $"Zaman: {readTime.Value:HH:mm:ss}"
+                            : "Zaman: -";
+                    },
+
+                    // Tooltip içinde anlık, minimum,
+                    // maksimum ve ortalama değerleri gösterir.
+                    YToolTipLabelFormatter = point =>
+                    {
+                        List<double> values = parameterValues
+                            .Where(item => item.Value.HasValue)
+                            .Select(item => item.Value!.Value)
+                            .ToList();
+
+                        double currentValue =
+                            point.Model?.Value ?? 0;
+
+                        if (values.Count == 0)
+                        {
+                            return
+                                $"{parameter.ParameterName}\n" +
+                                $"Anlık: {currentValue:0.##} " +
+                                $"{parameter.Unit}";
+                        }
+
+                        double minimumValue = values.Min();
+                        double maximumValue = values.Max();
+                        double averageValue = values.Average();
+
+                        return
+                            $"{parameter.ParameterName}\n" +
+                            $"Anlık: {currentValue:0.##} " +
+                            $"{parameter.Unit}\n" +
+                            $"Minimum: {minimumValue:0.##} " +
+                            $"{parameter.Unit}\n" +
+                            $"Maksimum: {maximumValue:0.##} " +
+                            $"{parameter.Unit}\n" +
+                            $"Ortalama: {averageValue:0.##} " +
+                            $"{parameter.Unit}";
+                    }
+                };
+
+            chartSeries[parameter.ParameterName] = lineSeries;
+            seriesList.Add(lineSeries);
+
+            colorIndex++;
+        }
+
+        sensorChart.Series = seriesList;
+    }
+
 
     // Sensör ekleme butonuna tıklandığında yeni sensör profili oluşturmak için SensorProfileForm formunu açar ve kullanıcıdan sensördeki parametre bilgilerini alır.
     private void btnAddSensor_Click(object? sender, EventArgs e)
@@ -213,43 +606,71 @@ public partial class Form1 : Form
 
         RefreshSensorList();
 
-        cmbSensorList.SelectedItem = form.CreatedProfile.SensorName;
+        selectedProfile = form.CreatedProfile;
 
+        int newIndex = _sensorProfiles.IndexOf(selectedProfile);
+
+        cmbSensorList.SelectedIndexChanged -= cmbSensorList_SelectedIndexChanged;
+        cmbSensorList.SelectedIndex = newIndex;
+        cmbSensorList.SelectedIndexChanged += cmbSensorList_SelectedIndexChanged;
+
+        LoadSelectedSensorToGrid();
+        CreateChartSeries();
+
+        Log("Yeni sensör eklendi: " + selectedProfile.SensorName);
     }
+
 
 
     // Sensör listesi combobox'ını günceller ve kullanıcıya mevcut sensör profillerini gösterir.
     private void RefreshSensorList()
     {
+        cmbSensorList.SelectedIndexChanged -= cmbSensorList_SelectedIndexChanged;
+
         cmbSensorList.Items.Clear();
+
         foreach (var profile in _sensorProfiles)
         {
             cmbSensorList.Items.Add(profile.SensorName);
         }
+
+        cmbSensorList.SelectedIndexChanged += cmbSensorList_SelectedIndexChanged;
     }
+
 
     // Form gösterildiğinde log dosyasına kayıt yapılacaksa kullanıcıya log klasörü seçmesi için uyarı verir.
     private void Form1_Shown(object sender, EventArgs e)
     {
-        if (chcLogToFile.Checked)
+        UpdateLogControls();
+
+        if (chcLogToFile.Checked &&
+            string.IsNullOrWhiteSpace(_logFilePath))
         {
             MessageBox.Show(
-                "Logları dosyaya kaydetmek için lütfen log klasörü seçin.",
-                "Log Klasörü Seçimi",
+                "Logları dosyaya kaydetmek için lütfen bir log dosyası seçin.",
+                "Log Dosyası Seçimi",
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+                MessageBoxIcon.Information);
 
-            SelectLogFolder();
-            this.ActiveControl = btnConnected;
+            bool selected = SelectLogFolder();
+
+            if (!selected)
+            {
+                _logFilePath = "";
+                UpdateLogControls();
+            }
         }
+
+        ActiveControl = btnConnected;
     }
+
 
     // Form yeniden boyutlandırıldığında DataGridView üzerindeki seçimi temizler ve odaklanmayı "Bağlan" butonuna verir.
     private void Form1_Resize(object sender, EventArgs e)
     {
         BeginInvoke(new Action(ClearUiSelection));
     }
+
 
     // fonksiyonların bulunduğu checkbox seçildiğinde ilgili alanları etkinleştirir veya devre dışı bırakır.
     private void cmbFuncCode_SelectedIndexChanged(object sender, EventArgs e)
@@ -274,6 +695,7 @@ public partial class Form1 : Form
         UpdateWriteFieldsByFunctionCode();
     }
 
+
     // Sürekli okuma başladığında diğer alanların pasifleşmesi
     private void SetModbusSettingsEnabled(bool enabled)
     {
@@ -287,12 +709,24 @@ public partial class Form1 : Form
         txtWriteAddress.Enabled = enabled;
         txtWriteValue.Enabled = enabled;
         cmbWriteDataType.Enabled = enabled;
+        cmbSensorList.Enabled = enabled;
+        groupBox5.Enabled = enabled;
+        dgvSensorParameters.Enabled = enabled;
+        cmbConnectionType.Enabled = enabled;
+        cmbPortName.Enabled = enabled;
+        txtIpAddress.Enabled = enabled;
+        txtTCPPort.Enabled = enabled;
+        cmbParity.Enabled = enabled;
+        cmbStopBits.Enabled = enabled;
+        cmbBaudRate.Enabled = enabled;
+        cmbDataBits.Enabled = enabled;
 
         // Sensör alanlarını da devre dışı bırak
         txtSensorName.Enabled = enabled;
         txtSensorSlave.Enabled = enabled;
         btnSaveProfile.Enabled = enabled;
     }
+
     // Sürekli okuma için timer tick eventi. Bu event her tick olduğunda ReadModbus fonksiyonunu çağırır ve okuma işlemini gerçekleştirir.
     private void ReadTimer_Tick(object? sender, EventArgs e)
     {
@@ -308,38 +742,57 @@ public partial class Form1 : Form
         }
     }
 
+
     // Loglama fonksiyonu, txtLog TextBox'ına mesajları ekler ve zaman damgası ekler.
     private void Log(string message)
     {
-        string logMessage = $"[{DateTime.Now:HH:mm:ss}] {message}";
+        string logMessage =
+            $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}";
 
-        txtLog.AppendText(logMessage + Environment.NewLine);
+        txtLog.AppendText(
+            logMessage + Environment.NewLine);
 
-        if (chcLogToFile.Checked)
+        if (!chcLogToFile.Checked)
+            return;
+
+        if (string.IsNullOrWhiteSpace(_logFilePath))
         {
-            if (string.IsNullOrWhiteSpace(_logFolderPath))
-            {
-                chcLogToFile.Checked = false;
-                Log("Log klasörü seçilmedi. Dosyaya kayıt kapatıldı.");
-                return;
-            }
+            _logFilePath = "";
+            UpdateLogControls();
 
-            Directory.CreateDirectory(_logFolderPath);
+            txtLog.AppendText(
+                $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] " +
+                "Log dosyası seçilmedi. Dosyaya kayıt kapatıldı." +
+                Environment.NewLine);
 
-            string filePath = Path.Combine(
-                _logFolderPath,
-                $"ModbusLog_{DateTime.Now:yyyyMMdd}.txt"
-            );
+            return;
+        }
 
-            File.AppendAllText(filePath, logMessage + Environment.NewLine);
+        try
+        {
+            File.AppendAllText(
+                _logFilePath,
+                logMessage + Environment.NewLine);
+        }
+        catch (Exception ex)
+        {
+            txtLog.AppendText(
+                $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] " +
+                $"Log dosyasına yazma hatası: {ex.Message}" +
+                Environment.NewLine);
+
+            _logFilePath = "";
+            UpdateLogControls();
         }
     }
+
 
     // "Read" butonuna tıklandığında okuma işlemini başlatır.
     private void btnRead_Click(object sender, EventArgs e)
     {
         ReadModbus();
     }
+
 
     // "Sürekli Okuma Başlat" butonuna tıklandığında timer'ı başlatır.
     private void btnStartRead_Click(object sender, EventArgs e)
@@ -369,6 +822,7 @@ public partial class Form1 : Form
         Log($"Sürekli okuma başlatıldı. Aralık: {second} saniye.");
     }
 
+
     // "Okuma Durdur" butonuna tıklandığında timer'ı durdurur.
     private void btnStop_Click(object sender, EventArgs e)
     {
@@ -383,6 +837,7 @@ public partial class Form1 : Form
 
         Log("Sürekli okuma durduruldu.");
     }
+
 
     // Fonksiyon koduna göre alanları günceller. Read, write fonksiyonları arasındaki ayrımı yapar. 
     private void UpdateWriteFieldsByFunctionCode()
@@ -403,6 +858,7 @@ public partial class Form1 : Form
         btnRead.Enabled = !isWriteFunction;
     }
 
+
     // Modbus okuma işlemini gerçekleştirir ve sonuçları UI üzerinde gösterir.
     private void ReadModbus()
     {
@@ -413,20 +869,14 @@ public partial class Form1 : Form
         }
         try
         {
-            ModbusReadRequest request = BuildRequest();
-            ModbusReadResult result = _modbusReaderService.Read(request);
-
-            lblRawRegister.Text = "Raw Register : " + result.RawText;
-            lblSensorValue.Text = "Sensör Değeri : " + result.ParsedValue;
-            lblLastRead.Text = "Son Okuma : " + result.ReadTime.ToString("dd.MM.yyyy HH:mm:ss");
-
-            Log("Okuma başarılı. Değer: " + result.ParsedValue);
-
+            
             if (selectedProfile != null)
             {
                 ReadSensorProfileValues();
             }
 
+            ModbusReadRequest request = BuildRequest();
+            ModbusReadResult result = _modbusReaderService.Read(request);
         }
         catch (Exception ex)
         {
@@ -434,6 +884,7 @@ public partial class Form1 : Form
         }
 
     }
+
 
     // ModbusReadRequest nesnesini UI'dan alınan değerlerle oluşturur.
     private ModbusReadRequest BuildRequest()
@@ -464,6 +915,7 @@ public partial class Form1 : Form
         };
     }
 
+
     // Read ve write fonksiyonlarının seçilmesini sağlar.
     private int GetSelectedFunctionCode()
     {
@@ -477,6 +929,7 @@ public partial class Form1 : Form
 
         return 0;
     }
+
 
     // "Bağlan" butonuna tıklandığında bağlantı ayarlarını hazırlar ve UI üzerinde durumu günceller.
     private void btnConnected_Click(object sender, EventArgs e)
@@ -497,6 +950,7 @@ public partial class Form1 : Form
         }
     }
 
+
     // "Bağlantıyı Kes" butonuna tıklandığında bağlantıyı keser ve UI üzerinde durumu günceller.
     private void btnDisconnected_Click(object sender, EventArgs e)
     {
@@ -508,6 +962,7 @@ public partial class Form1 : Form
 
         Log("Bağlantı kesildi.");
     }
+
 
     // "Write" butonuna tıklandığında Modbus yazma işlemini gerçekleştirir. Eğer bağlantı kurulmamışsa önce bağlantı kurulur.
     private void WriteModbus()
@@ -532,12 +987,14 @@ public partial class Form1 : Form
 
     }
 
+
     // "Write" butonuna tıklandığında Modbus yazma işlemini başlatır.
     private void btnWrite_Click(object sender, EventArgs e)
     {
         WriteModbus();
 
     }
+
 
     // Sensör kaydetme butonuna tıklandığında kullanıcı tarafından girilen sensör profilini kaydeder veya günceller.
     private void btnSaveProfile_Click(object sender, EventArgs e)
@@ -561,6 +1018,7 @@ public partial class Form1 : Form
         Log("Sensör profili güncellendi: " + selectedProfile.SensorName);
     }
 
+
     // Kullanıcı tarafından girilen katsayı değerlerini double tipine dönüştürür. Virgül veya nokta ile ayrılmış sayıları destekler.
     private bool TryParseCoefficient(string text, out double value)
     {
@@ -570,6 +1028,7 @@ public partial class Form1 : Form
             CultureInfo.InvariantCulture,
             out value);
     }
+
 
     // Sensör profilini okur ve register değerlerini Modbus üzerinden alır, ardından katsayıları uygular ve UI üzerinde gösterir.
     private void ReadSensorProfileValues()
@@ -582,35 +1041,71 @@ public partial class Form1 : Form
 
         SaveGridValuesToSelectedProfile();
 
-        List<string> valueTexts = new List<string>();
-
         if (selectedProfile.Parameters == null || selectedProfile.Parameters.Count == 0)
         {
             Log("Seçili sensöre ait parametre bulunamadı.");
             return;
         }
 
-        // Her bir parametre için Modbus üzerinden register değerini okur, katsayıyı uygular ve UI üzerinde gösterir.
+        List<string> rawTexts = new List<string>();
+        List<string> valueTexts = new List<string>();
 
         foreach (var parameter in selectedProfile.Parameters)
         {
             ushort rawValue = ReadSingleRegister(parameter.RegisterAddress);
-
             double calculatedValue = rawValue * parameter.Coefficient;
 
             parameter.RawValue = rawValue.ToString();
             parameter.CalculatedValue = calculatedValue.ToString("0.##") + " " + parameter.Unit;
 
+            rawTexts.Add($"{parameter.ParameterName}={rawValue}");
             valueTexts.Add($"{parameter.ParameterName}: {parameter.CalculatedValue}");
+
+            AddValueToChart(parameter.ParameterName, calculatedValue);
         }
 
         LoadSelectedSensorToGrid();
 
         lblActiveSensor.Text = "Aktif Sensör: " + selectedProfile.SensorName;
-        lblSensorLastRead.Text = "Son Okuma: " + DateTime.Now.ToString("HH:mm:ss");
+        lblSensorLastRead.Text = "Son Okuma: " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
 
-        Log($"{selectedProfile.SensorName} okundu → " + string.Join(", ", valueTexts));
+        lblRawRegister.Text =
+            "Raw Register:" + Environment.NewLine +
+            string.Join(Environment.NewLine, rawTexts);
+
+        lblSensorValue.Text =
+            "Sensör Değeri:" + Environment.NewLine +
+            string.Join(Environment.NewLine, valueTexts);
+
+        Log($"Okuma Başarılı | {selectedProfile.SensorName} sensörü okundu => {string.Join(", ", valueTexts)}");
     }
+
+
+    // Grafik üzerinde ilgili parametreye ait değeri ekler ve maksimum nokta sayısını aşarsa eski değerleri siler. Ayrıca X eksenini günceller.
+    private void AddValueToChart(string parameterName, double value)
+    {
+        if (!chartSeries.TryGetValue(
+                parameterName,
+                out LineSeries<DateTimePoint>? series))
+        {
+            return;
+        }
+
+        if (series.Values is not
+            ObservableCollection<DateTimePoint> values)
+        {
+            values = new ObservableCollection<DateTimePoint>();
+            series.Values = values;
+        }
+
+        DateTime readTime = DateTime.Now;
+
+        values.Add(
+            new DateTimePoint(
+                readTime,
+                value));
+    }
+
 
     // DataGridView üzerindeki değerleri seçili sensör profilinin parametrelerine kaydeder.
     private void SaveGridValuesToSelectedProfile()
@@ -647,6 +1142,7 @@ public partial class Form1 : Form
         }
     }
 
+
     // Modbus üzerinden tek bir register okur ve ushort tipinde döner.
     private ushort ReadSingleRegister(int registerAddress)
     {
@@ -674,72 +1170,118 @@ public partial class Form1 : Form
         return result.Registers[0];
     }
 
-    // Dosya yolu seç
-    private void SelectLogFolder()
-    {
-        using FolderBrowserDialog dialog = new FolderBrowserDialog();
-        dialog.Description = "Log dosyalarının kaydedileceği klasörü seçin";
 
-        if (dialog.ShowDialog() == DialogResult.OK)
+    // Kullanıcıya log dosyası seçmesi için SaveFileDialog açar ve seçilen dosya yolunu _logFilePath değişkenine atar. Eğer kullanıcı iptal ederse false döner.
+    private bool SelectLogFolder()
+    {
+        using SaveFileDialog dialog = new SaveFileDialog();
+
+        dialog.Title = "Log dosyasını seçin";
+        dialog.Filter = "Text Dosyası (*.txt)|*.txt";
+        dialog.DefaultExt = "txt";
+        dialog.AddExtension = true;
+
+        // Daha önce dosya seçildiyse mevcut dosya adını göster.
+        if (!string.IsNullOrWhiteSpace(_logFilePath))
         {
-            _logFolderPath = dialog.SelectedPath;
-            lblFilePath.Text = "Dosya yolu: " + _logFolderPath;
-            Log("Log klasörü seçildi: " + _logFolderPath);
+            dialog.InitialDirectory =
+                Path.GetDirectoryName(_logFilePath);
+
+            dialog.FileName =
+                Path.GetFileName(_logFilePath);
         }
         else
         {
-            chcLogToFile.Checked = false;
-            _logFolderPath = "";
-
-            lblFilePath.Text = "Dosya yolu: -------";
-
-            Log("Log klasörü seçilmedi. Dosyaya kayıt kapatıldı.");
+            dialog.FileName =
+                $"ModbusLog_{DateTime.Now:yyyyMMdd}.txt";
         }
+
+        if (dialog.ShowDialog() != DialogResult.OK)
+        {
+            return false;
+        }
+
+        _logFilePath = dialog.FileName;
+
+        UpdateLogControls();
+
+        Log("Log dosyası seçildi: " + _logFilePath);
+
+        return true;
     }
+
 
     // Dosya yolunu seçme butonuna bastığında kullanıcıya klasör seçme dialogu açar ve seçilen klasörü log dosyası için kullanır.
     private void btnSelectLogFolder_Click(object sender, EventArgs e)
     {
-        SelectLogFolder();
+        string previousPath = _logFilePath;
+
+        bool selected = SelectLogFolder();
+
+        if (!selected)
+        {
+            // Kullanıcı iptal ettiyse önceki seçim korunur.
+            _logFilePath = previousPath;
+            UpdateLogControls();
+        }
     }
+
 
     // Log dosyasına kayıt yapılıp yapılmayacağını belirleyen checkbox değiştiğinde çalışır.
     // Eğer checkbox işaretlenmişse ve log klasörü seçilmemişse kullanıcıya klasör seçme dialogu açılır.
     // Checkbox işaretlenmemişse log klasörü temizlenir ve UI üzerinde gösterilir.
     private void chcLogToFile_CheckedChanged(object sender, EventArgs e)
     {
-        if (chcLogToFile.Checked && string.IsNullOrWhiteSpace(_logFolderPath))
+        if (_updatingLogControls)
+            return;
+
+        // Checkbox işaretlendiyse
+        if (chcLogToFile.Checked)
         {
-            SelectLogFolder();
+            // Zaten bir dosya seçilmişse tekrar pencere açma.
+            if (!string.IsNullOrWhiteSpace(_logFilePath))
+            {
+                UpdateLogControls();
+                return;
+            }
+
+            bool selected = SelectLogFolder();
+
+            // Kullanıcı dosya seçmeden pencereyi kapattıysa
+            // checkbox tekrar kapatılır.
+            if (!selected)
+            {
+                _logFilePath = "";
+                UpdateLogControls();
+            }
+
+            return;
         }
 
-        if (!chcLogToFile.Checked)
-        {
-            _logFolderPath = "";
-            lblFilePath.Text = "Dosya yolu: -----";
-        }
+        // Checkbox kullanıcı tarafından kapatıldıysa
+        // dosyaya yazma devre dışı bırakılır.
+        _logFilePath = "";
 
+        UpdateLogControls();
+
+        Log("Dosyaya log kaydı kapatıldı.");
     }
+
 
     // Sensör listesini combobox'dan seçtiğinde ilgili sensör profilini yükler ve UI üzerinde gösterir.
     private void cmbSensorList_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (cmbSensorList.SelectedItem == null)
+        if (cmbSensorList.SelectedIndex < 0)
             return;
 
-        selectedProfile = _sensorProfiles
-            .FirstOrDefault(p => p.SensorName == cmbSensorList.SelectedItem.ToString());
-
-        if (selectedProfile == null)
-        {
-            Log("Seçilen sensör listede bulunamadı: " + cmbSensorList.Text);
-            return;
-        }
+        selectedProfile = _sensorProfiles[cmbSensorList.SelectedIndex];
 
         LoadSelectedSensorToGrid();
+        CreateChartSeries();
 
         Log("Aktif sensör seçildi: " + selectedProfile.SensorName);
     }
+
 
     //DataGrid yapısı ile sensör parametrelerini ekleme, silme ve düzenleme işlemlerini sağlar.
     private void InitializeSensorParameterGrid()
@@ -764,14 +1306,21 @@ public partial class Form1 : Form
         dgvSensorParameters.Columns["CalculatedValue"].ReadOnly = true;
     }
 
+
     // Sensör listesinden sensörü seçince parametreleri doldur
     private void LoadSelectedSensorToGrid()
     {
         dgvSensorParameters.Rows.Clear();
 
         if (selectedProfile == null)
+        {
+            Log("selectedProfile null geldi.");
             return;
+        }
 
+
+        txtSensorSlave.Text = selectedProfile.SlaveId.ToString();
+        txtSensorName.Text = selectedProfile.SensorName;
 
         foreach (var parameter in selectedProfile.Parameters)
         {
@@ -786,12 +1335,13 @@ public partial class Form1 : Form
         }
 
         lblActiveSensor.Text = "Aktif Sensör: " + selectedProfile.SensorName;
-        txtSensorSlave.Text = selectedProfile.SlaveId.ToString();
-        txtSensorName.Text = selectedProfile.SensorName;
 
         dgvSensorParameters.ClearSelection();
         dgvSensorParameters.CurrentCell = null;
+
+        // CreateChartSeries();
     }
+
 
     // DataGridView üzerindeki seçimi temizler ve odaklanmayı "Bağlan" butonuna verir.
     private void ClearUiSelection()

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SensorProfileForm));
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -141,6 +142,8 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = Properties.Resources.yiva;
+            BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(498, 328);
             Controls.Add(btnCancel);
             Controls.Add(btnSave);
@@ -153,6 +156,8 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
+            DoubleBuffered = true;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "SensorProfileForm";
             Text = "Sensör Ekle";
             ResumeLayout(false);

@@ -28,7 +28,28 @@ partial class Form1
     /// </summary>
     private void InitializeComponent()
     {
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
         tableLayoutPanel1 = new TableLayoutPanel();
+        groupBox1 = new GroupBox();
+        tlpConnection = new TableLayoutPanel();
+        label1 = new Label();
+        cmbConnectionType = new ComboBox();
+        label4 = new Label();
+        cmbPortName = new ComboBox();
+        label3 = new Label();
+        txtIpAddress = new TextBox();
+        label7 = new Label();
+        txtTCPPort = new TextBox();
+        label2 = new Label();
+        cmbBaudRate = new ComboBox();
+        label5 = new Label();
+        cmbDataBits = new ComboBox();
+        label6 = new Label();
+        cmbParity = new ComboBox();
+        StopBits = new Label();
+        cmbStopBits = new ComboBox();
+        btnConnected = new Button();
+        btnDisconnected = new Button();
         groupBox2 = new GroupBox();
         tlpModBus = new TableLayoutPanel();
         txtSamplingTime = new TextBox();
@@ -64,34 +85,13 @@ partial class Form1
         buttonPanel = new TableLayoutPanel();
         btnAddSensor = new Button();
         btnSaveProfile = new Button();
-        groupBox3 = new GroupBox();
+        grpGraph = new GroupBox();
         grpSensorValues = new GroupBox();
         cmbSensorList = new ComboBox();
+        lblSensorValue = new Label();
         lblSensorLastRead = new Label();
         lblActiveSensor = new Label();
-        lblLastRead = new Label();
-        lblSensorValue = new Label();
         lblRawRegister = new Label();
-        groupBox1 = new GroupBox();
-        tlpConnection = new TableLayoutPanel();
-        label1 = new Label();
-        cmbConnectionType = new ComboBox();
-        label4 = new Label();
-        cmbPortName = new ComboBox();
-        label3 = new Label();
-        txtIpAddress = new TextBox();
-        label7 = new Label();
-        txtTCPPort = new TextBox();
-        label2 = new Label();
-        cmbBaudRate = new ComboBox();
-        label5 = new Label();
-        cmbDataBits = new ComboBox();
-        label6 = new Label();
-        cmbParity = new ComboBox();
-        StopBits = new Label();
-        cmbStopBits = new ComboBox();
-        btnConnected = new Button();
-        btnDisconnected = new Button();
         groupBox4 = new GroupBox();
         tlpLog = new TableLayoutPanel();
         txtLog = new TextBox();
@@ -99,16 +99,15 @@ partial class Form1
         btnSelectLogFolder = new Button();
         lblFilePath = new Label();
         tableLayoutPanel1.SuspendLayout();
+        groupBox1.SuspendLayout();
+        tlpConnection.SuspendLayout();
         groupBox2.SuspendLayout();
         tlpModBus.SuspendLayout();
         groupBox5.SuspendLayout();
         tableLayoutPanel2.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvSensorParameters).BeginInit();
         buttonPanel.SuspendLayout();
-        groupBox3.SuspendLayout();
         grpSensorValues.SuspendLayout();
-        groupBox1.SuspendLayout();
-        tlpConnection.SuspendLayout();
         groupBox4.SuspendLayout();
         tlpLog.SuspendLayout();
         SuspendLayout();
@@ -118,19 +117,249 @@ partial class Form1
         tableLayoutPanel1.ColumnCount = 4;
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28F));
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 28F));
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 18F));
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 26F));
-        tableLayoutPanel1.Controls.Add(groupBox2, 1, 0);
-        tableLayoutPanel1.Controls.Add(groupBox3, 2, 0);
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 21.4707813F));
+        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.587F));
         tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
-        tableLayoutPanel1.Controls.Add(groupBox4, 3, 0);
+        tableLayoutPanel1.Controls.Add(groupBox2, 1, 0);
+        tableLayoutPanel1.Controls.Add(grpGraph, 2, 0);
+        tableLayoutPanel1.Controls.Add(grpSensorValues, 2, 1);
+        tableLayoutPanel1.Controls.Add(groupBox4, 3, 1);
         tableLayoutPanel1.Dock = DockStyle.Fill;
         tableLayoutPanel1.Location = new Point(0, 0);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
-        tableLayoutPanel1.RowCount = 1;
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tableLayoutPanel1.RowCount = 2;
+        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
         tableLayoutPanel1.Size = new Size(1523, 855);
         tableLayoutPanel1.TabIndex = 0;
+        // 
+        // groupBox1
+        // 
+        groupBox1.Controls.Add(tlpConnection);
+        groupBox1.Dock = DockStyle.Fill;
+        groupBox1.Location = new Point(3, 3);
+        groupBox1.Name = "groupBox1";
+        tableLayoutPanel1.SetRowSpan(groupBox1, 2);
+        groupBox1.Size = new Size(420, 849);
+        groupBox1.TabIndex = 2;
+        groupBox1.TabStop = false;
+        groupBox1.Text = "Bağlantı Ayarları";
+        // 
+        // tlpConnection
+        // 
+        tlpConnection.BackgroundImage = ModbusSensorReader.UI.Properties.Resources.yiva;
+        tlpConnection.BackgroundImageLayout = ImageLayout.Center;
+        tlpConnection.ColumnCount = 2;
+        tlpConnection.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        tlpConnection.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65F));
+        tlpConnection.Controls.Add(label1, 0, 0);
+        tlpConnection.Controls.Add(cmbConnectionType, 1, 0);
+        tlpConnection.Controls.Add(label4, 0, 1);
+        tlpConnection.Controls.Add(cmbPortName, 1, 1);
+        tlpConnection.Controls.Add(label3, 0, 2);
+        tlpConnection.Controls.Add(txtIpAddress, 1, 2);
+        tlpConnection.Controls.Add(label7, 0, 3);
+        tlpConnection.Controls.Add(txtTCPPort, 1, 3);
+        tlpConnection.Controls.Add(label2, 0, 4);
+        tlpConnection.Controls.Add(cmbBaudRate, 1, 4);
+        tlpConnection.Controls.Add(label5, 0, 5);
+        tlpConnection.Controls.Add(cmbDataBits, 1, 5);
+        tlpConnection.Controls.Add(label6, 0, 6);
+        tlpConnection.Controls.Add(cmbParity, 1, 6);
+        tlpConnection.Controls.Add(StopBits, 0, 7);
+        tlpConnection.Controls.Add(cmbStopBits, 1, 7);
+        tlpConnection.Controls.Add(btnConnected, 0, 9);
+        tlpConnection.Controls.Add(btnDisconnected, 1, 9);
+        tlpConnection.Dock = DockStyle.Fill;
+        tlpConnection.Location = new Point(3, 23);
+        tlpConnection.Name = "tlpConnection";
+        tlpConnection.RowCount = 10;
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+        tlpConnection.Size = new Size(414, 823);
+        tlpConnection.TabIndex = 0;
+        // 
+        // label1
+        // 
+        label1.AutoSize = true;
+        label1.Dock = DockStyle.Fill;
+        label1.Location = new Point(3, 0);
+        label1.Name = "label1";
+        label1.Size = new Size(174, 40);
+        label1.TabIndex = 21;
+        label1.Text = "Bağlantı Tipi";
+        // 
+        // cmbConnectionType
+        // 
+        cmbConnectionType.Dock = DockStyle.Fill;
+        cmbConnectionType.FormattingEnabled = true;
+        cmbConnectionType.Location = new Point(183, 3);
+        cmbConnectionType.Name = "cmbConnectionType";
+        cmbConnectionType.Size = new Size(228, 28);
+        cmbConnectionType.TabIndex = 22;
+        // 
+        // label4
+        // 
+        label4.AutoSize = true;
+        label4.Dock = DockStyle.Fill;
+        label4.Location = new Point(3, 40);
+        label4.Name = "label4";
+        label4.Size = new Size(174, 40);
+        label4.TabIndex = 26;
+        label4.Text = "COM Port";
+        // 
+        // cmbPortName
+        // 
+        cmbPortName.Dock = DockStyle.Fill;
+        cmbPortName.FormattingEnabled = true;
+        cmbPortName.Location = new Point(183, 43);
+        cmbPortName.Name = "cmbPortName";
+        cmbPortName.Size = new Size(228, 28);
+        cmbPortName.TabIndex = 27;
+        // 
+        // label3
+        // 
+        label3.AutoSize = true;
+        label3.Dock = DockStyle.Fill;
+        label3.Location = new Point(3, 80);
+        label3.Name = "label3";
+        label3.Size = new Size(174, 40);
+        label3.TabIndex = 25;
+        label3.Text = "IP Adresi";
+        // 
+        // txtIpAddress
+        // 
+        txtIpAddress.Dock = DockStyle.Fill;
+        txtIpAddress.Location = new Point(183, 83);
+        txtIpAddress.Name = "txtIpAddress";
+        txtIpAddress.Size = new Size(228, 27);
+        txtIpAddress.TabIndex = 28;
+        // 
+        // label7
+        // 
+        label7.AutoSize = true;
+        label7.Dock = DockStyle.Fill;
+        label7.Location = new Point(3, 120);
+        label7.Name = "label7";
+        label7.Size = new Size(174, 40);
+        label7.TabIndex = 35;
+        label7.Text = "TCP Port";
+        // 
+        // txtTCPPort
+        // 
+        txtTCPPort.Dock = DockStyle.Fill;
+        txtTCPPort.Location = new Point(183, 123);
+        txtTCPPort.Name = "txtTCPPort";
+        txtTCPPort.Size = new Size(228, 27);
+        txtTCPPort.TabIndex = 36;
+        // 
+        // label2
+        // 
+        label2.AutoSize = true;
+        label2.Dock = DockStyle.Fill;
+        label2.Location = new Point(3, 160);
+        label2.Name = "label2";
+        label2.Size = new Size(174, 40);
+        label2.TabIndex = 23;
+        label2.Text = "BaudRate";
+        // 
+        // cmbBaudRate
+        // 
+        cmbBaudRate.Dock = DockStyle.Fill;
+        cmbBaudRate.FormattingEnabled = true;
+        cmbBaudRate.Location = new Point(183, 163);
+        cmbBaudRate.Name = "cmbBaudRate";
+        cmbBaudRate.Size = new Size(228, 28);
+        cmbBaudRate.TabIndex = 37;
+        // 
+        // label5
+        // 
+        label5.AutoSize = true;
+        label5.Dock = DockStyle.Fill;
+        label5.Location = new Point(3, 200);
+        label5.Name = "label5";
+        label5.Size = new Size(174, 40);
+        label5.TabIndex = 29;
+        label5.Text = "DataBits";
+        // 
+        // cmbDataBits
+        // 
+        cmbDataBits.Dock = DockStyle.Fill;
+        cmbDataBits.FormattingEnabled = true;
+        cmbDataBits.Location = new Point(183, 203);
+        cmbDataBits.Name = "cmbDataBits";
+        cmbDataBits.Size = new Size(228, 28);
+        cmbDataBits.TabIndex = 38;
+        // 
+        // label6
+        // 
+        label6.AutoSize = true;
+        label6.Dock = DockStyle.Fill;
+        label6.Location = new Point(3, 240);
+        label6.Name = "label6";
+        label6.Size = new Size(174, 40);
+        label6.TabIndex = 30;
+        label6.Text = "Parity";
+        // 
+        // cmbParity
+        // 
+        cmbParity.Dock = DockStyle.Fill;
+        cmbParity.FormattingEnabled = true;
+        cmbParity.Location = new Point(183, 243);
+        cmbParity.Name = "cmbParity";
+        cmbParity.Size = new Size(228, 28);
+        cmbParity.TabIndex = 24;
+        // 
+        // StopBits
+        // 
+        StopBits.AutoSize = true;
+        StopBits.Dock = DockStyle.Fill;
+        StopBits.Location = new Point(3, 280);
+        StopBits.Name = "StopBits";
+        StopBits.Size = new Size(174, 40);
+        StopBits.TabIndex = 32;
+        StopBits.Text = "Stop Bits";
+        // 
+        // cmbStopBits
+        // 
+        cmbStopBits.Dock = DockStyle.Fill;
+        cmbStopBits.FormattingEnabled = true;
+        cmbStopBits.Location = new Point(183, 283);
+        cmbStopBits.Name = "cmbStopBits";
+        cmbStopBits.Size = new Size(228, 28);
+        cmbStopBits.TabIndex = 31;
+        // 
+        // btnConnected
+        // 
+        btnConnected.Dock = DockStyle.Fill;
+        btnConnected.Location = new Point(6, 779);
+        btnConnected.Margin = new Padding(6);
+        btnConnected.Name = "btnConnected";
+        btnConnected.Size = new Size(168, 38);
+        btnConnected.TabIndex = 38;
+        btnConnected.Text = "Bağlan";
+        btnConnected.UseVisualStyleBackColor = true;
+        // 
+        // btnDisconnected
+        // 
+        btnDisconnected.Dock = DockStyle.Fill;
+        btnDisconnected.Location = new Point(186, 779);
+        btnDisconnected.Margin = new Padding(6);
+        btnDisconnected.Name = "btnDisconnected";
+        btnDisconnected.Size = new Size(222, 38);
+        btnDisconnected.TabIndex = 39;
+        btnDisconnected.Text = "Bağlantıyı Kes";
+        btnDisconnected.UseVisualStyleBackColor = true;
         // 
         // groupBox2
         // 
@@ -138,6 +367,7 @@ partial class Form1
         groupBox2.Dock = DockStyle.Fill;
         groupBox2.Location = new Point(429, 3);
         groupBox2.Name = "groupBox2";
+        tableLayoutPanel1.SetRowSpan(groupBox2, 2);
         groupBox2.Size = new Size(420, 849);
         groupBox2.TabIndex = 3;
         groupBox2.TabStop = false;
@@ -533,30 +763,29 @@ partial class Form1
         btnSaveProfile.UseVisualStyleBackColor = true;
         btnSaveProfile.Click += btnSaveProfile_Click;
         // 
-        // groupBox3
+        // grpGraph
         // 
-        groupBox3.Controls.Add(grpSensorValues);
-        groupBox3.Controls.Add(lblLastRead);
-        groupBox3.Controls.Add(lblSensorValue);
-        groupBox3.Controls.Add(lblRawRegister);
-        groupBox3.Dock = DockStyle.Fill;
-        groupBox3.Location = new Point(855, 3);
-        groupBox3.Name = "groupBox3";
-        groupBox3.Size = new Size(268, 849);
-        groupBox3.TabIndex = 4;
-        groupBox3.TabStop = false;
-        groupBox3.Text = "Okunan Değer";
+        tableLayoutPanel1.SetColumnSpan(grpGraph, 2);
+        grpGraph.Dock = DockStyle.Fill;
+        grpGraph.Location = new Point(855, 3);
+        grpGraph.Name = "grpGraph";
+        grpGraph.Size = new Size(665, 507);
+        grpGraph.TabIndex = 4;
+        grpGraph.TabStop = false;
+        grpGraph.Text = "Parametre Grafiği";
         // 
         // grpSensorValues
         // 
         grpSensorValues.Controls.Add(cmbSensorList);
+        grpSensorValues.Controls.Add(lblSensorValue);
         grpSensorValues.Controls.Add(lblSensorLastRead);
         grpSensorValues.Controls.Add(lblActiveSensor);
-        grpSensorValues.Dock = DockStyle.Bottom;
-        grpSensorValues.Location = new Point(3, 326);
+        grpSensorValues.Controls.Add(lblRawRegister);
+        grpSensorValues.Dock = DockStyle.Fill;
+        grpSensorValues.Location = new Point(855, 516);
         grpSensorValues.Name = "grpSensorValues";
-        grpSensorValues.Size = new Size(262, 520);
-        grpSensorValues.TabIndex = 3;
+        grpSensorValues.Size = new Size(320, 336);
+        grpSensorValues.TabIndex = 4;
         grpSensorValues.TabStop = false;
         grpSensorValues.Text = "Sensör Değerleri";
         // 
@@ -566,10 +795,18 @@ partial class Form1
         cmbSensorList.FormattingEnabled = true;
         cmbSensorList.Location = new Point(3, 23);
         cmbSensorList.Name = "cmbSensorList";
-        cmbSensorList.Size = new Size(256, 28);
+        cmbSensorList.Size = new Size(314, 28);
         cmbSensorList.TabIndex = 5;
         cmbSensorList.Text = "Sensör Seç";
-        cmbSensorList.SelectedIndexChanged += cmbSensorList_SelectedIndexChanged;
+        // 
+        // lblSensorValue
+        // 
+        lblSensorValue.AutoSize = true;
+        lblSensorValue.Location = new Point(6, 259);
+        lblSensorValue.Name = "lblSensorValue";
+        lblSensorValue.Size = new Size(123, 20);
+        lblSensorValue.TabIndex = 1;
+        lblSensorValue.Text = "Sensör Değeri:  - ";
         // 
         // lblSensorLastRead
         // 
@@ -589,265 +826,22 @@ partial class Form1
         lblActiveSensor.TabIndex = 0;
         lblActiveSensor.Text = "Aktif Sensör: - ";
         // 
-        // lblLastRead
-        // 
-        lblLastRead.AutoSize = true;
-        lblLastRead.Location = new Point(0, 146);
-        lblLastRead.Name = "lblLastRead";
-        lblLastRead.Size = new Size(106, 20);
-        lblLastRead.TabIndex = 2;
-        lblLastRead.Text = "Son Okuma:  - ";
-        // 
-        // lblSensorValue
-        // 
-        lblSensorValue.AutoSize = true;
-        lblSensorValue.Location = new Point(0, 103);
-        lblSensorValue.Name = "lblSensorValue";
-        lblSensorValue.Size = new Size(123, 20);
-        lblSensorValue.TabIndex = 1;
-        lblSensorValue.Text = "Sensör Değeri:  - ";
-        // 
         // lblRawRegister
         // 
         lblRawRegister.AutoSize = true;
-        lblRawRegister.Location = new Point(0, 63);
+        lblRawRegister.Location = new Point(8, 131);
         lblRawRegister.Name = "lblRawRegister";
         lblRawRegister.Size = new Size(116, 20);
         lblRawRegister.TabIndex = 0;
         lblRawRegister.Text = "Raw Register:  - ";
         // 
-        // groupBox1
-        // 
-        groupBox1.Controls.Add(tlpConnection);
-        groupBox1.Dock = DockStyle.Fill;
-        groupBox1.Location = new Point(3, 3);
-        groupBox1.Name = "groupBox1";
-        groupBox1.Size = new Size(420, 849);
-        groupBox1.TabIndex = 2;
-        groupBox1.TabStop = false;
-        groupBox1.Text = "Bağlantı Ayarları";
-        // 
-        // tlpConnection
-        // 
-        tlpConnection.ColumnCount = 2;
-        tlpConnection.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-        tlpConnection.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65F));
-        tlpConnection.Controls.Add(label1, 0, 0);
-        tlpConnection.Controls.Add(cmbConnectionType, 1, 0);
-        tlpConnection.Controls.Add(label4, 0, 1);
-        tlpConnection.Controls.Add(cmbPortName, 1, 1);
-        tlpConnection.Controls.Add(label3, 0, 2);
-        tlpConnection.Controls.Add(txtIpAddress, 1, 2);
-        tlpConnection.Controls.Add(label7, 0, 3);
-        tlpConnection.Controls.Add(txtTCPPort, 1, 3);
-        tlpConnection.Controls.Add(label2, 0, 4);
-        tlpConnection.Controls.Add(cmbBaudRate, 1, 4);
-        tlpConnection.Controls.Add(label5, 0, 5);
-        tlpConnection.Controls.Add(cmbDataBits, 1, 5);
-        tlpConnection.Controls.Add(label6, 0, 6);
-        tlpConnection.Controls.Add(cmbParity, 1, 6);
-        tlpConnection.Controls.Add(StopBits, 0, 7);
-        tlpConnection.Controls.Add(cmbStopBits, 1, 7);
-        tlpConnection.Controls.Add(btnConnected, 0, 9);
-        tlpConnection.Controls.Add(btnDisconnected, 1, 9);
-        tlpConnection.Dock = DockStyle.Fill;
-        tlpConnection.Location = new Point(3, 23);
-        tlpConnection.Name = "tlpConnection";
-        tlpConnection.RowCount = 10;
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-        tlpConnection.Size = new Size(414, 823);
-        tlpConnection.TabIndex = 0;
-        // 
-        // label1
-        // 
-        label1.AutoSize = true;
-        label1.Dock = DockStyle.Fill;
-        label1.Location = new Point(3, 0);
-        label1.Name = "label1";
-        label1.Size = new Size(174, 40);
-        label1.TabIndex = 21;
-        label1.Text = "Bağlantı Tipi";
-        // 
-        // cmbConnectionType
-        // 
-        cmbConnectionType.Dock = DockStyle.Fill;
-        cmbConnectionType.FormattingEnabled = true;
-        cmbConnectionType.Location = new Point(183, 3);
-        cmbConnectionType.Name = "cmbConnectionType";
-        cmbConnectionType.Size = new Size(228, 28);
-        cmbConnectionType.TabIndex = 22;
-        // 
-        // label4
-        // 
-        label4.AutoSize = true;
-        label4.Dock = DockStyle.Fill;
-        label4.Location = new Point(3, 40);
-        label4.Name = "label4";
-        label4.Size = new Size(174, 40);
-        label4.TabIndex = 26;
-        label4.Text = "COM Port";
-        // 
-        // cmbPortName
-        // 
-        cmbPortName.Dock = DockStyle.Fill;
-        cmbPortName.FormattingEnabled = true;
-        cmbPortName.Location = new Point(183, 43);
-        cmbPortName.Name = "cmbPortName";
-        cmbPortName.Size = new Size(228, 28);
-        cmbPortName.TabIndex = 27;
-        // 
-        // label3
-        // 
-        label3.AutoSize = true;
-        label3.Dock = DockStyle.Fill;
-        label3.Location = new Point(3, 80);
-        label3.Name = "label3";
-        label3.Size = new Size(174, 40);
-        label3.TabIndex = 25;
-        label3.Text = "IP Adresi";
-        // 
-        // txtIpAddress
-        // 
-        txtIpAddress.Dock = DockStyle.Fill;
-        txtIpAddress.Location = new Point(183, 83);
-        txtIpAddress.Name = "txtIpAddress";
-        txtIpAddress.Size = new Size(228, 27);
-        txtIpAddress.TabIndex = 28;
-        // 
-        // label7
-        // 
-        label7.AutoSize = true;
-        label7.Dock = DockStyle.Fill;
-        label7.Location = new Point(3, 120);
-        label7.Name = "label7";
-        label7.Size = new Size(174, 40);
-        label7.TabIndex = 35;
-        label7.Text = "TCP Port";
-        // 
-        // txtTCPPort
-        // 
-        txtTCPPort.Dock = DockStyle.Fill;
-        txtTCPPort.Location = new Point(183, 123);
-        txtTCPPort.Name = "txtTCPPort";
-        txtTCPPort.Size = new Size(228, 27);
-        txtTCPPort.TabIndex = 36;
-        // 
-        // label2
-        // 
-        label2.AutoSize = true;
-        label2.Dock = DockStyle.Fill;
-        label2.Location = new Point(3, 160);
-        label2.Name = "label2";
-        label2.Size = new Size(174, 40);
-        label2.TabIndex = 23;
-        label2.Text = "BaudRate";
-        // 
-        // cmbBaudRate
-        // 
-        cmbBaudRate.Dock = DockStyle.Fill;
-        cmbBaudRate.FormattingEnabled = true;
-        cmbBaudRate.Location = new Point(183, 163);
-        cmbBaudRate.Name = "cmbBaudRate";
-        cmbBaudRate.Size = new Size(228, 28);
-        cmbBaudRate.TabIndex = 37;
-        // 
-        // label5
-        // 
-        label5.AutoSize = true;
-        label5.Dock = DockStyle.Fill;
-        label5.Location = new Point(3, 200);
-        label5.Name = "label5";
-        label5.Size = new Size(174, 40);
-        label5.TabIndex = 29;
-        label5.Text = "DataBits";
-        // 
-        // cmbDataBits
-        // 
-        cmbDataBits.Dock = DockStyle.Fill;
-        cmbDataBits.FormattingEnabled = true;
-        cmbDataBits.Location = new Point(183, 203);
-        cmbDataBits.Name = "cmbDataBits";
-        cmbDataBits.Size = new Size(228, 28);
-        cmbDataBits.TabIndex = 38;
-        // 
-        // label6
-        // 
-        label6.AutoSize = true;
-        label6.Dock = DockStyle.Fill;
-        label6.Location = new Point(3, 240);
-        label6.Name = "label6";
-        label6.Size = new Size(174, 40);
-        label6.TabIndex = 30;
-        label6.Text = "Parity";
-        // 
-        // cmbParity
-        // 
-        cmbParity.Dock = DockStyle.Fill;
-        cmbParity.FormattingEnabled = true;
-        cmbParity.Location = new Point(183, 243);
-        cmbParity.Name = "cmbParity";
-        cmbParity.Size = new Size(228, 28);
-        cmbParity.TabIndex = 24;
-        // 
-        // StopBits
-        // 
-        StopBits.AutoSize = true;
-        StopBits.Dock = DockStyle.Fill;
-        StopBits.Location = new Point(3, 280);
-        StopBits.Name = "StopBits";
-        StopBits.Size = new Size(174, 40);
-        StopBits.TabIndex = 32;
-        StopBits.Text = "Stop Bits";
-        // 
-        // cmbStopBits
-        // 
-        cmbStopBits.Dock = DockStyle.Fill;
-        cmbStopBits.FormattingEnabled = true;
-        cmbStopBits.Location = new Point(183, 283);
-        cmbStopBits.Name = "cmbStopBits";
-        cmbStopBits.Size = new Size(228, 28);
-        cmbStopBits.TabIndex = 31;
-        // 
-        // btnConnected
-        // 
-        btnConnected.Dock = DockStyle.Fill;
-        btnConnected.Location = new Point(6, 779);
-        btnConnected.Margin = new Padding(6);
-        btnConnected.Name = "btnConnected";
-        btnConnected.Size = new Size(168, 38);
-        btnConnected.TabIndex = 38;
-        btnConnected.Text = "Bağlan";
-        btnConnected.UseVisualStyleBackColor = true;
-        // 
-        // btnDisconnected
-        // 
-        btnDisconnected.Dock = DockStyle.Fill;
-        btnDisconnected.Location = new Point(186, 779);
-        btnDisconnected.Margin = new Padding(6);
-        btnDisconnected.Name = "btnDisconnected";
-        btnDisconnected.Size = new Size(222, 38);
-        btnDisconnected.TabIndex = 39;
-        btnDisconnected.Text = "Bağlantıyı Kes";
-        btnDisconnected.UseVisualStyleBackColor = true;
-        // 
         // groupBox4
         // 
         groupBox4.Controls.Add(tlpLog);
         groupBox4.Dock = DockStyle.Fill;
-        groupBox4.Location = new Point(1129, 3);
+        groupBox4.Location = new Point(1181, 516);
         groupBox4.Name = "groupBox4";
-        groupBox4.Size = new Size(391, 849);
+        groupBox4.Size = new Size(339, 336);
         groupBox4.TabIndex = 5;
         groupBox4.TabStop = false;
         groupBox4.Text = "Log Kayıtları";
@@ -868,7 +862,7 @@ partial class Form1
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-        tlpLog.Size = new Size(385, 823);
+        tlpLog.Size = new Size(333, 310);
         tlpLog.TabIndex = 0;
         // 
         // txtLog
@@ -879,16 +873,15 @@ partial class Form1
         txtLog.Name = "txtLog";
         txtLog.ReadOnly = true;
         txtLog.ScrollBars = ScrollBars.Vertical;
-        txtLog.Size = new Size(379, 708);
+        txtLog.Size = new Size(327, 195);
         txtLog.TabIndex = 0;
-        txtLog.Text = "Sensör Seç";
         // 
         // chcLogToFile
         // 
         chcLogToFile.AutoSize = true;
         chcLogToFile.Checked = true;
         chcLogToFile.CheckState = CheckState.Checked;
-        chcLogToFile.Location = new Point(3, 717);
+        chcLogToFile.Location = new Point(3, 204);
         chcLogToFile.Name = "chcLogToFile";
         chcLogToFile.Size = new Size(137, 24);
         chcLogToFile.TabIndex = 1;
@@ -899,9 +892,9 @@ partial class Form1
         // btnSelectLogFolder
         // 
         btnSelectLogFolder.Dock = DockStyle.Fill;
-        btnSelectLogFolder.Location = new Point(3, 778);
+        btnSelectLogFolder.Location = new Point(3, 265);
         btnSelectLogFolder.Name = "btnSelectLogFolder";
-        btnSelectLogFolder.Size = new Size(379, 42);
+        btnSelectLogFolder.Size = new Size(327, 42);
         btnSelectLogFolder.TabIndex = 2;
         btnSelectLogFolder.Text = "Log Klasörü Seç";
         btnSelectLogFolder.UseVisualStyleBackColor = true;
@@ -909,13 +902,15 @@ partial class Form1
         // 
         // lblFilePath
         // 
+        lblFilePath.AutoEllipsis = true;
         lblFilePath.AutoSize = true;
         lblFilePath.Dock = DockStyle.Fill;
-        lblFilePath.Location = new Point(3, 744);
+        lblFilePath.Location = new Point(3, 231);
         lblFilePath.Name = "lblFilePath";
-        lblFilePath.Size = new Size(379, 31);
+        lblFilePath.Size = new Size(327, 31);
         lblFilePath.TabIndex = 6;
         lblFilePath.Text = "Log Dosya Yolu: - ";
+        lblFilePath.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // Form1
         // 
@@ -923,10 +918,14 @@ partial class Form1
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(1523, 855);
         Controls.Add(tableLayoutPanel1);
+        Icon = (Icon)resources.GetObject("$this.Icon");
         Name = "Form1";
         Text = "Modbus Sensor Reader";
         Load += Form1_Load;
         tableLayoutPanel1.ResumeLayout(false);
+        groupBox1.ResumeLayout(false);
+        tlpConnection.ResumeLayout(false);
+        tlpConnection.PerformLayout();
         groupBox2.ResumeLayout(false);
         tlpModBus.ResumeLayout(false);
         tlpModBus.PerformLayout();
@@ -935,13 +934,8 @@ partial class Form1
         tableLayoutPanel2.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvSensorParameters).EndInit();
         buttonPanel.ResumeLayout(false);
-        groupBox3.ResumeLayout(false);
-        groupBox3.PerformLayout();
         grpSensorValues.ResumeLayout(false);
         grpSensorValues.PerformLayout();
-        groupBox1.ResumeLayout(false);
-        tlpConnection.ResumeLayout(false);
-        tlpConnection.PerformLayout();
         groupBox4.ResumeLayout(false);
         tlpLog.ResumeLayout(false);
         tlpLog.PerformLayout();
@@ -1011,13 +1005,12 @@ partial class Form1
     private Button btnAddSensor;
     private Label lblParameterTitle;
     private TableLayoutPanel buttonPanel;
-    private GroupBox groupBox3;
+    private DataGridView dgvSensorParameters;
     private GroupBox grpSensorValues;
     private ComboBox cmbSensorList;
+    private Label lblSensorValue;
     private Label lblSensorLastRead;
     private Label lblActiveSensor;
-    private Label lblLastRead;
-    private Label lblSensorValue;
     private Label lblRawRegister;
-    private DataGridView dgvSensorParameters;
+    private GroupBox grpGraph;
 }
