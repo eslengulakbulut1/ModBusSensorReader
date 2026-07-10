@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ModbusSensorReader.Library")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64a674f8b08a71ffb8402b8a4872e9d1569d6a30")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea37767eaadf56d91749d0c07ef95c68121a1c88")]
 [assembly: System.Reflection.AssemblyProductAttribute("ModbusSensorReader.Library")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ModbusSensorReader.Library")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

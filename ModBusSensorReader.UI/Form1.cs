@@ -20,14 +20,18 @@ using LiveChartsCore.SkiaSharpView.SKCharts;
 
 public partial class Form1 : Form
 {
-    private readonly ModbusReaderServices _modbusReaderService = new ModbusReaderServices();
+    // Servisler
+    private readonly ModbusReaderServices _modbusReaderService = new();
+    private readonly ExcelExportServices _excelExportService = new();
 
+    // Zamanlayıcılars
     private readonly System.Windows.Forms.Timer _readTimer = new System.Windows.Forms.Timer();
     private readonly System.Windows.Forms.Timer _writeTimer = new System.Windows.Forms.Timer();
 
     private readonly ContextMenuStrip _chartContextMenu =
     new ContextMenuStrip();
 
+    // Grafiği kaydetme menü öğesi. Kullanıcı grafiği kaydetmek istediğinde bu menü öğesine tıklar.
     private readonly ToolStripMenuItem _saveChartMenuItem =
         new ToolStripMenuItem("Grafiği Kaydet");
 
@@ -45,6 +49,9 @@ public partial class Form1 : Form
     private readonly Dictionary<string, LineSeries<DateTimePoint>> chartSeries =
     new Dictionary<string, LineSeries<DateTimePoint>>();
     private const int MaxChartPoints = 50;
+
+    // Excel'e aktarmak için kullanılan liste. Her okuma sonrası bu listeye veri eklenir ve kullanıcı istediğinde Excel'e aktarılır.
+    private readonly List<ExcelRecord> _excelRecords = new List<ExcelRecord>();
 
     private bool _isConnected = false;
 
@@ -187,7 +194,7 @@ public partial class Form1 : Form
             cmbSensorList.SelectedIndex = 0;
 
             //LoadSelectedSensorToGrid();
-           // CreateChartSeries();
+            // CreateChartSeries();
         }
 
         cmbFuncCode_SelectedIndexChanged(null, EventArgs.Empty);
@@ -869,7 +876,7 @@ public partial class Form1 : Form
         }
         try
         {
-            
+
             if (selectedProfile != null)
             {
                 ReadSensorProfileValues();
@@ -1033,6 +1040,7 @@ public partial class Form1 : Form
     // Sensör profilini okur ve register değerlerini Modbus üzerinden alır, ardından katsayıları uygular ve UI üzerinde gösterir.
     private void ReadSensorProfileValues()
     {
+        DateTime readingTime = DateTime.Now;
         if (selectedProfile == null)
         {
             Log("Önce sensör profili seçilmelidir.");
@@ -1062,7 +1070,22 @@ public partial class Form1 : Form
             valueTexts.Add($"{parameter.ParameterName}: {parameter.CalculatedValue}");
 
             AddValueToChart(parameter.ParameterName, calculatedValue);
+
+            // Excel kayıtlarını tutan listeye yeni bir kayıt ekler.
+            _excelRecords.Add(new ExcelRecord
+            {
+                ReadingTime = readingTime,
+                SensorName = selectedProfile.SensorName,
+                SlaveId = selectedProfile.SlaveId,
+                ParameterName = parameter.ParameterName,
+                RegisterAddress = parameter.RegisterAddress,
+                RawValue = rawValue,
+                CalculatedValue = calculatedValue,
+                Unit = parameter.Unit
+            });
         }
+
+        // Log($"Excel kayıt listesine {selectedProfile.Parameters.Count} kayıt eklendi. Toplam kayıt: {_excelRecords.Count}");
 
         LoadSelectedSensorToGrid();
 
@@ -1294,7 +1317,7 @@ public partial class Form1 : Form
         DataGridViewComboBoxColumn unitColumn = new DataGridViewComboBoxColumn();
         unitColumn.Name = "Unit";
         unitColumn.HeaderText = "Birim";
-        unitColumn.Items.AddRange("","°C", "hPa", "%", "m/s", "°", "mm", "V", "A", "Pa", "rpm");
+        unitColumn.Items.AddRange("", "°C", "hPa", "%", "m/s", "°", "mm", "V", "A", "Pa", "rpm");
         dgvSensorParameters.Columns.Add(unitColumn);
 
 
@@ -1350,5 +1373,27 @@ public partial class Form1 : Form
         dgvSensorParameters.CurrentCell = null;
 
         btnConnected.Focus();
+    }
+
+    // Excel'e aktarma butonunun çalışması
+    private void btnExportExcel_Click(object sender, EventArgs e)
+    {
+        if(_excelRecords.Count == 0)
+        {
+            MessageBox.Show(
+                "Excel'e aktarılacak veri bulunamadı.");
+            return;
+        }
+
+        using SaveFileDialog dialog = new SaveFileDialog();
+
+        dialog.Filter = "Excel Dosyası (*.xlsx)|*.xlsx";
+        dialog.FileName = $"SensorData_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+        if(dialog.ShowDialog() != DialogResult.OK)
+            return;
+        _excelExportService.Export(_excelRecords, dialog.FileName);
+
+        MessageBox.Show("Excel dosyası başarıyla oluşturuldu");
     }
 }

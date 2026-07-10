@@ -190,3 +190,11 @@ C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\
 C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\runtimes\win-arm64\native\libSkiaSharp.dll
 C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\runtimes\win-x64\native\libSkiaSharp.dll
 C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\runtimes\win-x86\native\libSkiaSharp.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\ClosedXML.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\ClosedXML.Parser.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\ExcelNumberFormat.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\RBush.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
+C:\Users\CASPER\Desktop\staj\ModBusSensorReader\ModbusSensorReader.UI\bin\Debug\net8.0-windows\System.IO.Packaging.dll

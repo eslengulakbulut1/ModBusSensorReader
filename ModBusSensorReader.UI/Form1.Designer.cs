@@ -94,6 +94,7 @@ partial class Form1
         lblRawRegister = new Label();
         groupBox4 = new GroupBox();
         tlpLog = new TableLayoutPanel();
+        btnExportExcel = new Button();
         txtLog = new TextBox();
         chcLogToFile = new CheckBox();
         btnSelectLogFolder = new Button();
@@ -128,9 +129,9 @@ partial class Form1
         tableLayoutPanel1.Location = new Point(0, 0);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
         tableLayoutPanel1.RowCount = 2;
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-        tableLayoutPanel1.Size = new Size(1523, 855);
+        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 54.9120979F));
+        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 45.0879021F));
+        tableLayoutPanel1.Size = new Size(1523, 967);
         tableLayoutPanel1.TabIndex = 0;
         // 
         // groupBox1
@@ -140,7 +141,7 @@ partial class Form1
         groupBox1.Location = new Point(3, 3);
         groupBox1.Name = "groupBox1";
         tableLayoutPanel1.SetRowSpan(groupBox1, 2);
-        groupBox1.Size = new Size(420, 849);
+        groupBox1.Size = new Size(420, 961);
         groupBox1.TabIndex = 2;
         groupBox1.TabStop = false;
         groupBox1.Text = "Bağlantı Ayarları";
@@ -186,7 +187,7 @@ partial class Form1
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         tlpConnection.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-        tlpConnection.Size = new Size(414, 823);
+        tlpConnection.Size = new Size(414, 935);
         tlpConnection.TabIndex = 0;
         // 
         // label1
@@ -342,7 +343,7 @@ partial class Form1
         // btnConnected
         // 
         btnConnected.Dock = DockStyle.Fill;
-        btnConnected.Location = new Point(6, 779);
+        btnConnected.Location = new Point(6, 891);
         btnConnected.Margin = new Padding(6);
         btnConnected.Name = "btnConnected";
         btnConnected.Size = new Size(168, 38);
@@ -353,7 +354,7 @@ partial class Form1
         // btnDisconnected
         // 
         btnDisconnected.Dock = DockStyle.Fill;
-        btnDisconnected.Location = new Point(186, 779);
+        btnDisconnected.Location = new Point(186, 891);
         btnDisconnected.Margin = new Padding(6);
         btnDisconnected.Name = "btnDisconnected";
         btnDisconnected.Size = new Size(222, 38);
@@ -368,7 +369,7 @@ partial class Form1
         groupBox2.Location = new Point(429, 3);
         groupBox2.Name = "groupBox2";
         tableLayoutPanel1.SetRowSpan(groupBox2, 2);
-        groupBox2.Size = new Size(420, 849);
+        groupBox2.Size = new Size(420, 961);
         groupBox2.TabIndex = 3;
         groupBox2.TabStop = false;
         groupBox2.Text = "ModBus İşlem Ayarları";
@@ -418,7 +419,7 @@ partial class Form1
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 43F));
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
         tlpModBus.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpModBus.Size = new Size(414, 823);
+        tlpModBus.Size = new Size(414, 935);
         tlpModBus.TabIndex = 0;
         // 
         // txtSamplingTime
@@ -442,7 +443,7 @@ partial class Form1
         // btnWrite
         // 
         btnWrite.Dock = DockStyle.Fill;
-        btnWrite.Location = new Point(183, 739);
+        btnWrite.Location = new Point(183, 851);
         btnWrite.Name = "btnWrite";
         btnWrite.Size = new Size(228, 37);
         btnWrite.TabIndex = 35;
@@ -452,7 +453,7 @@ partial class Form1
         // btnStop
         // 
         btnStop.Dock = DockStyle.Fill;
-        btnStop.Location = new Point(183, 782);
+        btnStop.Location = new Point(183, 894);
         btnStop.Name = "btnStop";
         btnStop.Size = new Size(228, 38);
         btnStop.TabIndex = 27;
@@ -480,7 +481,7 @@ partial class Form1
         // btnRead
         // 
         btnRead.Dock = DockStyle.Fill;
-        btnRead.Location = new Point(3, 739);
+        btnRead.Location = new Point(3, 851);
         btnRead.Name = "btnRead";
         btnRead.Size = new Size(174, 37);
         btnRead.TabIndex = 19;
@@ -600,7 +601,7 @@ partial class Form1
         // btnStartRead
         // 
         btnStartRead.Dock = DockStyle.Fill;
-        btnStartRead.Location = new Point(3, 782);
+        btnStartRead.Location = new Point(3, 894);
         btnStartRead.Name = "btnStartRead";
         btnStartRead.Size = new Size(174, 38);
         btnStartRead.TabIndex = 28;
@@ -633,7 +634,7 @@ partial class Form1
         groupBox5.Dock = DockStyle.Fill;
         groupBox5.Location = new Point(3, 363);
         groupBox5.Name = "groupBox5";
-        groupBox5.Size = new Size(408, 370);
+        groupBox5.Size = new Size(408, 482);
         groupBox5.TabIndex = 38;
         groupBox5.TabStop = false;
         groupBox5.Text = "Sensör Profili";
@@ -659,7 +660,7 @@ partial class Form1
         tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
         tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
-        tableLayoutPanel2.Size = new Size(402, 344);
+        tableLayoutPanel2.Size = new Size(402, 456);
         tableLayoutPanel2.TabIndex = 0;
         // 
         // label17
@@ -723,7 +724,7 @@ partial class Form1
         dgvSensorParameters.RowHeadersVisible = false;
         dgvSensorParameters.RowHeadersWidth = 51;
         dgvSensorParameters.ScrollBars = ScrollBars.Vertical;
-        dgvSensorParameters.Size = new Size(396, 215);
+        dgvSensorParameters.Size = new Size(396, 327);
         dgvSensorParameters.TabIndex = 11;
         // 
         // buttonPanel
@@ -735,7 +736,7 @@ partial class Form1
         buttonPanel.Controls.Add(btnAddSensor, 0, 0);
         buttonPanel.Controls.Add(btnSaveProfile, 1, 0);
         buttonPanel.Dock = DockStyle.Fill;
-        buttonPanel.Location = new Point(3, 309);
+        buttonPanel.Location = new Point(3, 421);
         buttonPanel.Name = "buttonPanel";
         buttonPanel.RowCount = 1;
         buttonPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
@@ -769,7 +770,7 @@ partial class Form1
         grpGraph.Dock = DockStyle.Fill;
         grpGraph.Location = new Point(855, 3);
         grpGraph.Name = "grpGraph";
-        grpGraph.Size = new Size(665, 507);
+        grpGraph.Size = new Size(665, 525);
         grpGraph.TabIndex = 4;
         grpGraph.TabStop = false;
         grpGraph.Text = "Parametre Grafiği";
@@ -782,9 +783,9 @@ partial class Form1
         grpSensorValues.Controls.Add(lblActiveSensor);
         grpSensorValues.Controls.Add(lblRawRegister);
         grpSensorValues.Dock = DockStyle.Fill;
-        grpSensorValues.Location = new Point(855, 516);
+        grpSensorValues.Location = new Point(855, 534);
         grpSensorValues.Name = "grpSensorValues";
-        grpSensorValues.Size = new Size(320, 336);
+        grpSensorValues.Size = new Size(320, 430);
         grpSensorValues.TabIndex = 4;
         grpSensorValues.TabStop = false;
         grpSensorValues.Text = "Sensör Değerleri";
@@ -839,9 +840,9 @@ partial class Form1
         // 
         groupBox4.Controls.Add(tlpLog);
         groupBox4.Dock = DockStyle.Fill;
-        groupBox4.Location = new Point(1181, 516);
+        groupBox4.Location = new Point(1181, 534);
         groupBox4.Name = "groupBox4";
-        groupBox4.Size = new Size(339, 336);
+        groupBox4.Size = new Size(339, 430);
         groupBox4.TabIndex = 5;
         groupBox4.TabStop = false;
         groupBox4.Text = "Log Kayıtları";
@@ -850,6 +851,7 @@ partial class Form1
         // 
         tlpLog.ColumnCount = 1;
         tlpLog.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+        tlpLog.Controls.Add(btnExportExcel, 0, 4);
         tlpLog.Controls.Add(txtLog, 0, 0);
         tlpLog.Controls.Add(chcLogToFile, 0, 1);
         tlpLog.Controls.Add(btnSelectLogFolder, 0, 3);
@@ -857,13 +859,25 @@ partial class Form1
         tlpLog.Dock = DockStyle.Fill;
         tlpLog.Location = new Point(3, 23);
         tlpLog.Name = "tlpLog";
-        tlpLog.RowCount = 4;
+        tlpLog.RowCount = 5;
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
+        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 32F));
+        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
         tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-        tlpLog.Size = new Size(333, 310);
+        tlpLog.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+        tlpLog.Size = new Size(333, 404);
         tlpLog.TabIndex = 0;
+        // 
+        // btnExportExcel
+        // 
+        btnExportExcel.Dock = DockStyle.Fill;
+        btnExportExcel.Location = new Point(3, 367);
+        btnExportExcel.Name = "btnExportExcel";
+        btnExportExcel.Size = new Size(327, 34);
+        btnExportExcel.TabIndex = 6;
+        btnExportExcel.Text = "Verileri Excel'e Aktar";
+        btnExportExcel.UseVisualStyleBackColor = true;
+        btnExportExcel.Click += btnExportExcel_Click;
         // 
         // txtLog
         // 
@@ -873,7 +887,7 @@ partial class Form1
         txtLog.Name = "txtLog";
         txtLog.ReadOnly = true;
         txtLog.ScrollBars = ScrollBars.Vertical;
-        txtLog.Size = new Size(327, 195);
+        txtLog.Size = new Size(327, 238);
         txtLog.TabIndex = 0;
         // 
         // chcLogToFile
@@ -881,7 +895,7 @@ partial class Form1
         chcLogToFile.AutoSize = true;
         chcLogToFile.Checked = true;
         chcLogToFile.CheckState = CheckState.Checked;
-        chcLogToFile.Location = new Point(3, 204);
+        chcLogToFile.Location = new Point(3, 247);
         chcLogToFile.Name = "chcLogToFile";
         chcLogToFile.Size = new Size(137, 24);
         chcLogToFile.TabIndex = 1;
@@ -892,7 +906,7 @@ partial class Form1
         // btnSelectLogFolder
         // 
         btnSelectLogFolder.Dock = DockStyle.Fill;
-        btnSelectLogFolder.Location = new Point(3, 265);
+        btnSelectLogFolder.Location = new Point(3, 319);
         btnSelectLogFolder.Name = "btnSelectLogFolder";
         btnSelectLogFolder.Size = new Size(327, 42);
         btnSelectLogFolder.TabIndex = 2;
@@ -905,9 +919,9 @@ partial class Form1
         lblFilePath.AutoEllipsis = true;
         lblFilePath.AutoSize = true;
         lblFilePath.Dock = DockStyle.Fill;
-        lblFilePath.Location = new Point(3, 231);
+        lblFilePath.Location = new Point(3, 276);
         lblFilePath.Name = "lblFilePath";
-        lblFilePath.Size = new Size(327, 31);
+        lblFilePath.Size = new Size(327, 40);
         lblFilePath.TabIndex = 6;
         lblFilePath.Text = "Log Dosya Yolu: - ";
         lblFilePath.TextAlign = ContentAlignment.MiddleLeft;
@@ -916,7 +930,7 @@ partial class Form1
         // 
         AutoScaleDimensions = new SizeF(8F, 20F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(1523, 855);
+        ClientSize = new Size(1523, 967);
         Controls.Add(tableLayoutPanel1);
         Icon = (Icon)resources.GetObject("$this.Icon");
         Name = "Form1";
@@ -1013,4 +1027,5 @@ partial class Form1
     private Label lblActiveSensor;
     private Label lblRawRegister;
     private GroupBox grpGraph;
+    private Button btnExportExcel;
 }
